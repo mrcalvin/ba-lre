@@ -5,7 +5,7 @@ package provide XOTcl::compat 0.1
 
 ::xotcl::Attribute instproc valuechangedcmd script {
     set :trace set
-    my proc [self proc] {obj prop value} $script
+    my proc "on=[current proc]" {obj prop value} $script
 }
 
 package provide XOTcl::compat 0.1
