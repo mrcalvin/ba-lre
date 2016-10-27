@@ -18,7 +18,7 @@ namespace eval ::UML2 {
 
   BusinessActivity::BreakGlassExtension instproc init args {
     [self] slots {
-      ::msxolib::SingleValued broken -default 0 -proc assign {domain var value} {
+      ::msxolib::SingleValued broken -default 0 -proc value=set {domain var value} {
 	my instvar default
 	if {![$domain exists $var]} {
 	  next
@@ -41,7 +41,7 @@ namespace eval ::UML2 {
 	}
       }
       
-      ::msxolib::SingleValued review_process_type -proc assign {domain var value} {
+      ::msxolib::SingleValued review_process_type -proc value=set {domain var value} {
 	my instvar default
 	if {![$domain exists $var]} {
 	  next
@@ -65,7 +65,7 @@ namespace eval ::UML2 {
 	}
       }
 
-      ::msxolib::SingleValued review_process_instance -proc assign {domain var value} {
+      ::msxolib::SingleValued review_process_instance -proc value=set {domain var value} {
 	my instvar default
 	if {![$domain exists $var]} {
 	  next
@@ -80,7 +80,7 @@ namespace eval ::UML2 {
 	}
       } 
 
-      ::msxolib::SingleValued review_process_activated -default 0 -proc assign {domain var value} {
+      ::msxolib::SingleValued review_process_activated -default 0 -proc value=set {domain var value} {
 	my instvar default
 	if {![$domain exists $var]} {
 	  next
@@ -255,7 +255,7 @@ namespace eval ::UML2 {
   
   BusinessAction::BreakGlassExtension instproc init args {
     [self] slots {
-      ::msxolib::SingleValued broken -default 0 -proc assign {domain var value} {
+      ::msxolib::SingleValued broken -default 0 -proc value=set {domain var value} {
 	my instvar default
 	if {![$domain exists $var]} {
 	  next
