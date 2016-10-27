@@ -302,6 +302,8 @@ namespace eval ::STORM {
 
   # from tcllib ::struct::list:Lequal
   TestScenario instproc lequal {a b} {
+    set a [lsort $a]
+    set b [lsort $b]
     if {[llength $a] != [llength $b]} {
       return 0
     }
