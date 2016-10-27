@@ -9,4 +9,4 @@ How to run:
 - `cd Activity/tests/`
 - `xotclsh activity-testsuite.xotcl`
 
-See (/README.orig)[README.orig] for details and copyright info.
+See [README.orig](/README.orig) for details and copyright info.

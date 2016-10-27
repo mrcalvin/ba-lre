@@ -9,7 +9,7 @@
 
 package provide STORM 0.5.1
 
-package require XOTcl
+package require XOTcl::compat
 namespace import -force ::xotcl::*
 
 namespace eval ::STORM {

@@ -9,7 +9,7 @@
 
 package provide MSXOLIB 0.1.1
 
-package require XOTcl
+package require XOTcl::compat
 namespace import -force ::xotcl::*
 
 namespace eval ::msxolib {
