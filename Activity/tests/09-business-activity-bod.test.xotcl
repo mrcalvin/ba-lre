@@ -1,0 +1,511 @@
+
+::STORM::TestCase BA_BOD \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::BusinessAction A
+      ::process addNode ::UML2::BusinessAction B
+      ::process addNode ::UML2::BusinessAction C
+      ::process addNode ::UML2::BusinessAction D
+      ::process addNode ::UML2::ActivityFinalNode E
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction A\
+	   ::UML2::BusinessAction B
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction B\
+	   ::UML2::BusinessAction C
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction C\
+	   ::UML2::BusinessAction D
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction D\
+	   ::UML2::BusinessAction A
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction D\
+	   ::UML2::ActivityFinalNode E
+    } \
+    -cleanup_script {
+      ::process destroy
+    }
+
+::STORM::TestScenario BA_BOD::SetSBindSuccess \
+    -test_body {[::process setSubjectBinding A D] success}\
+    -expected_result 1
+BA_BOD::SetSBindSuccess preconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] ""}
+    }
+BA_BOD::SetSBindSuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "A ::process::nodes::businessaction1"}
+    }
+BA_BOD order add BA_BOD::SetSBindSuccess end
+
+
+::STORM::TestScenario BA_BOD::SetSBindSuccess2 \
+    -test_body {[::process setSubjectBinding A D] success}\
+    -expected_result 1
+BA_BOD::SetSBindSuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetSBindSuccess2 end
+
+
+::STORM::TestScenario BA_BOD::SetSBindSuccess3 \
+    -test_body {[::process setSubjectBinding D C] success}\
+    -expected_result 1
+BA_BOD::SetSBindSuccess3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+    }
+BA_BOD order add BA_BOD::SetSBindSuccess3 end
+
+
+::STORM::TestScenario BA_BOD::SetRBindSuccess \
+    -test_body {[::process setRoleBinding B D] success}\
+    -expected_result 1
+BA_BOD::SetRBindSuccess preconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+    }
+BA_BOD::SetRBindSuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] "B ::process::nodes::businessaction2"}
+    }
+BA_BOD order add BA_BOD::SetRBindSuccess end
+
+
+::STORM::TestScenario BA_BOD::SetRBindSuccess2 \
+    -test_body {[::process setRoleBinding B D] success}\
+    -expected_result 1
+BA_BOD::SetRBindSuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] "B ::process::nodes::businessaction2"}
+    }
+BA_BOD order add BA_BOD::SetRBindSuccess2 end
+
+
+::STORM::TestScenario BA_BOD::SetRBindSuccess3 \
+    -test_body {[::process setRoleBinding C B] success}\
+    -expected_result 1
+BA_BOD::SetRBindSuccess3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] "B ::process::nodes::businessaction2"}
+    }
+BA_BOD order add BA_BOD::SetRBindSuccess3 end
+
+
+::STORM::TestScenario BA_BOD::SetRBindFail \
+    -test_body {[::process setRoleBinding D X] success}\
+    -expected_result 0
+BA_BOD::SetRBindFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] "B ::process::nodes::businessaction2"}
+    }
+BA_BOD order add BA_BOD::SetRBindFail end
+
+
+::STORM::TestScenario BA_BOD::SetRBindFail2 \
+    -test_body {[::process setRoleBinding Y D] success}\
+    -expected_result 0
+BA_BOD::SetRBindFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] "B ::process::nodes::businessaction2"}
+    }
+BA_BOD order add BA_BOD::SetRBindFail2 end
+
+
+::STORM::TestScenario BA_BOD::SetRBindSuccess4 \
+    -test_body {[::process setRoleBinding A D] success}\
+    -expected_result 1
+BA_BOD::SetRBindSuccess4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetRBindSuccess4 end
+
+
+::STORM::TestScenario BA_BOD::SetRBindFail3 \
+    -test_body {[::process setRoleBinding A A] success}\
+    -expected_result 0
+BA_BOD::SetRBindFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetRBindFail3 end
+
+
+::STORM::TestScenario BA_BOD::SetSBindFail \
+    -test_body {[::process setSubjectBinding D X] success}\
+    -expected_result 0
+BA_BOD::SetSBindFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetSBindFail end
+
+
+::STORM::TestScenario BA_BOD::SetSBindFail2 \
+    -test_body {[::process setSubjectBinding Y D] success}\
+    -expected_result 0
+BA_BOD::SetSBindFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetSBindFail2 end
+
+
+::STORM::TestScenario BA_BOD::SetSBindSuccess4 \
+    -test_body {[::process setSubjectBinding B C] success}\
+    -expected_result 1
+BA_BOD::SetSBindSuccess4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetSBindSuccess4 end
+
+
+::STORM::TestScenario BA_BOD::SetSBindFail3 \
+    -test_body {[::process setSubjectBinding A A] success}\
+    -expected_result 0
+BA_BOD::SetSBindFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::SetSBindFail3 end
+
+
+::STORM::TestScenario BA_BOD::UnsetSBindFail \
+    -test_body {[::process unsetSubjectBinding D X] success}\
+    -expected_result 0
+BA_BOD::UnsetSBindFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetSBindFail end
+
+
+::STORM::TestScenario BA_BOD::UnsetSBindFail2 \
+    -test_body {[::process unsetSubjectBinding Y D] success}\
+    -expected_result 0
+BA_BOD::UnsetSBindFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetSBindFail2 end
+
+
+::STORM::TestScenario BA_BOD::UnsetSBindFail3 \
+    -test_body {[::process unsetSubjectBinding A B] success}\
+    -expected_result 0
+BA_BOD::UnsetSBindFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetSBindFail3 end
+
+
+::STORM::TestScenario BA_BOD::UnsetRBindFail \
+    -test_body {[::process unsetRoleBinding D X] success}\
+    -expected_result 0
+BA_BOD::UnsetRBindFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetRBindFail end
+
+
+::STORM::TestScenario BA_BOD::UnsetRBindFail2 \
+    -test_body {[::process unsetRoleBinding Y D] success}\
+    -expected_result 0
+BA_BOD::UnsetRBindFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetRBindFail2 end
+
+
+::STORM::TestScenario BA_BOD::UnsetRBindFail3 \
+    -test_body {[::process unsetRoleBinding A B] success}\
+    -expected_result 0
+BA_BOD::UnsetRBindFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 set rolebinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetRBindFail3 end
+
+
+::STORM::TestScenario BA_BOD::UnsetRBindSuccess \
+    -test_body {[::process unsetRoleBinding B C] success}\
+    -expected_result 1
+BA_BOD::UnsetRBindSuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set rolebinding(A)] ::process::nodes::businessaction1}
+    }
+BA_BOD order add BA_BOD::UnsetRBindSuccess end
+
+
+::STORM::TestScenario BA_BOD::UnsetRBindSuccess2 \
+    -test_body {[::process unsetRoleBinding D B] success}\
+    -expected_result 1
+BA_BOD::UnsetRBindSuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] "A ::process::nodes::businessaction1"}
+    }
+BA_BOD order add BA_BOD::UnsetRBindSuccess2 end
+
+
+::STORM::TestScenario BA_BOD::UnsetRBindSuccess3 \
+    -test_body {[::process unsetRoleBinding A D] success}\
+    -expected_result 1
+BA_BOD::UnsetRBindSuccess3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set subjectbinding(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+    }
+BA_BOD order add BA_BOD::UnsetRBindSuccess3 end
+
+
+::STORM::TestScenario BA_BOD::UnsetSBindSuccess \
+    -test_body {[::process unsetSubjectBinding A D] success}\
+    -expected_result 1
+BA_BOD::UnsetSBindSuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set subjectbinding(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+    }
+BA_BOD order add BA_BOD::UnsetSBindSuccess end
+
+
+::STORM::TestScenario BA_BOD::UnsetSBindSuccess2 \
+    -test_body {[::process unsetSubjectBinding D C] success}\
+    -expected_result 1
+BA_BOD::UnsetSBindSuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+    }
+BA_BOD order add BA_BOD::UnsetSBindSuccess2 end
+
+
+::STORM::TestScenario BA_BOD::UnsetSBindSuccess3 \
+    -test_body {[::process unsetSubjectBinding B C] success}\
+    -expected_result 1
+BA_BOD::UnsetSBindSuccess3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+    }
+BA_BOD order add BA_BOD::UnsetSBindSuccess3 end
+

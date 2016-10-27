@@ -1,0 +1,326 @@
+
+::STORM::TestCase BA_SME_RH \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::BusinessAction T1
+      ::process addNode ::UML2::BusinessAction T2
+      ::process addNode ::UML2::BusinessAction T3
+      ::process addNode ::UML2::BusinessAction T4
+      ::process addNode ::UML2::BusinessAction T5
+      ::process addNode ::UML2::BusinessAction T6
+      ::process setSMEConstraint T1 T2
+      ::process setSMEConstraint T3 T4
+      ::process setDMEConstraint T1 T5
+
+      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::process associated_rbac_model ::rbacmodel
+      ::rbacmodel addRole A
+      ::rbacmodel addRole B
+      ::rbacmodel addRole C
+      ::rbacmodel addRole D
+      ::rbacmodel addRole E
+      ::rbacmodel addRole F
+      ::rbacmodel addRole G
+      ::rbacmodel addRole H
+      ::rbacmodel addRole I
+      ::rbacmodel addJuniorRoleRelation B A
+      ::rbacmodel addJuniorRoleRelation C A
+      ::rbacmodel addJuniorRoleRelation D B
+      ::rbacmodel addJuniorRoleRelation D C
+      ::rbacmodel addJuniorRoleRelation E D
+      ::rbacmodel addJuniorRoleRelation F D
+      ::rbacmodel addJuniorRoleRelation H G
+      ::rbacmodel addJuniorRoleRelation I H
+      ::rbacmodel taskRoleAssign ::process T1 F
+      ::rbacmodel taskRoleAssign ::process T2 I
+      ::rbacmodel taskRoleAssign ::process T3 D
+      ::rbacmodel taskRoleAssign ::process T4 H 
+      ::rbacmodel taskRoleAssign ::process T6 A
+    } \
+    -cleanup_script {
+      ::process destroy
+      ::rbacmodel destroy
+    }
+
+::STORM::TestScenario BA_SME_RH::SetSSDFail \
+    -test_body {[::process setSMEConstraint T1 T6] success}\
+    -expected_result 0
+BA_SME_RH::SetSSDFail preconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 array get sme] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] "T5 ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::rbacmodel::nodes::role1 array get tasks] "T6 ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role2 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role3 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role4 array get tasks] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::rbacmodel::nodes::role5 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get tasks] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectlyAssignedTasks] ::process::nodes::businessaction1}
+      {my lequal [::rbacmodel::nodes::role6 getAllAssignedTasks] "::process::nodes::businessaction1\
+                                                                  ::process::nodes::businessaction3\
+                                                                  ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role7 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get tasks] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::rbacmodel::nodes::role9 array get tasks] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::rbacmodel::nodes::role1 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role2 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [::rbacmodel::nodes::role3 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names juniorroles]] "B C"}
+      {my lequal [::rbacmodel::nodes::role5 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role6 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role7 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get juniorroles] "G ::rbacmodel::nodes::role7"}
+      {my lequal [::rbacmodel::nodes::role9 array get juniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectJuniorRoles] ::rbacmodel::nodes::role4}
+      {my lequal [::rbacmodel::nodes::role6 getAllJuniorRoles] "::rbacmodel::nodes::role1 ::rbacmodel::nodes::role2\
+                                                                ::rbacmodel::nodes::role3 ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role1 getDirectSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3"}
+      {my lequal [::rbacmodel::nodes::role1 getAllSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3\
+                                                                ::rbacmodel::nodes::role4 ::rbacmodel::nodes::role5\
+                                                                ::rbacmodel::nodes::role6"}
+      {my lequal [::rbacmodel::nodes::role2 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role3 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names seniorroles]] "E F"}
+      {my lequal [::rbacmodel::nodes::role5 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role7 array get seniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role8 array get seniorroles] "I ::rbacmodel::nodes::role9"}
+      {my lequal [::rbacmodel::nodes::role9 array get seniorroles] ""}
+    }
+BA_SME_RH::SetSSDFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 array get sme] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] "T5 ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::rbacmodel::nodes::role1 array get tasks] "T6 ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role2 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role3 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role4 array get tasks] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::rbacmodel::nodes::role5 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get tasks] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectlyAssignedTasks] ::process::nodes::businessaction1}
+      {my lequal [::rbacmodel::nodes::role6 getAllAssignedTasks] "::process::nodes::businessaction1\
+                                                                  ::process::nodes::businessaction3\
+                                                                  ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role7 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get tasks] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::rbacmodel::nodes::role9 array get tasks] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::rbacmodel::nodes::role1 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role2 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [::rbacmodel::nodes::role3 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names juniorroles]] "B C"}
+      {my lequal [::rbacmodel::nodes::role5 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role6 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role7 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get juniorroles] "G ::rbacmodel::nodes::role7"}
+      {my lequal [::rbacmodel::nodes::role9 array get juniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectJuniorRoles] ::rbacmodel::nodes::role4}
+      {my lequal [::rbacmodel::nodes::role6 getAllJuniorRoles] "::rbacmodel::nodes::role1 ::rbacmodel::nodes::role2\
+                                                                ::rbacmodel::nodes::role3 ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role1 getDirectSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3"}
+      {my lequal [::rbacmodel::nodes::role1 getAllSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3\
+                                                                ::rbacmodel::nodes::role4 ::rbacmodel::nodes::role5\
+                                                                ::rbacmodel::nodes::role6"}
+      {my lequal [::rbacmodel::nodes::role2 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role3 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names seniorroles]] "E F"}
+      {my lequal [::rbacmodel::nodes::role5 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role7 array get seniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role8 array get seniorroles] "I ::rbacmodel::nodes::role9"}
+      {my lequal [::rbacmodel::nodes::role9 array get seniorroles] ""}
+    }
+BA_SME_RH order add BA_SME_RH::SetSSDFail end
+
+
+
+::STORM::TestScenario BA_SME_RH::SetSSDFail2 \
+    -test_body {[::process setSMEConstraint T6 T1] success}\
+    -expected_result 0
+BA_SME_RH::SetSSDFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 array get sme] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] "T5 ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::rbacmodel::nodes::role1 array get tasks] "T6 ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role2 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role3 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role4 array get tasks] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::rbacmodel::nodes::role5 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get tasks] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectlyAssignedTasks] ::process::nodes::businessaction1}
+      {my lequal [::rbacmodel::nodes::role6 getAllAssignedTasks] "::process::nodes::businessaction1\
+                                                                  ::process::nodes::businessaction3\
+                                                                  ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role7 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get tasks] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::rbacmodel::nodes::role9 array get tasks] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::rbacmodel::nodes::role1 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role2 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [::rbacmodel::nodes::role3 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names juniorroles]] "B C"}
+      {my lequal [::rbacmodel::nodes::role5 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role6 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role7 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get juniorroles] "G ::rbacmodel::nodes::role7"}
+      {my lequal [::rbacmodel::nodes::role9 array get juniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectJuniorRoles] ::rbacmodel::nodes::role4}
+      {my lequal [::rbacmodel::nodes::role6 getAllJuniorRoles] "::rbacmodel::nodes::role1 ::rbacmodel::nodes::role2\
+                                                                ::rbacmodel::nodes::role3 ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role1 getDirectSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3"}
+      {my lequal [::rbacmodel::nodes::role1 getAllSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3\
+                                                                ::rbacmodel::nodes::role4 ::rbacmodel::nodes::role5\
+                                                                ::rbacmodel::nodes::role6"}
+      {my lequal [::rbacmodel::nodes::role2 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role3 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names seniorroles]] "E F"}
+      {my lequal [::rbacmodel::nodes::role5 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role7 array get seniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role8 array get seniorroles] "I ::rbacmodel::nodes::role9"}
+      {my lequal [::rbacmodel::nodes::role9 array get seniorroles] ""}
+    }
+BA_SME_RH order add BA_SME_RH::SetSSDFail2 end
+
+
+::STORM::TestScenario BA_SME_RH::SetSSDFail3 \
+    -test_body {
+      ::process addNode ::UML2::BusinessAction T7
+      ::rbacmodel taskRoleAssign ::process T7 E
+      [::process setSMEConstraint T6 T7] success}\
+    -expected_result 0
+BA_SME_RH::SetSSDFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 array get sme] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] "T5 ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::rbacmodel::nodes::role1 array get tasks] "T6 ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role2 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role3 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role4 array get tasks] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::rbacmodel::nodes::role5 array get tasks] "T7 ::process::nodes::businessaction7"}
+      {my lequal [::rbacmodel::nodes::role6 array get tasks] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectlyAssignedTasks] ::process::nodes::businessaction1}
+      {my lequal [::rbacmodel::nodes::role6 getAllAssignedTasks] "::process::nodes::businessaction1\
+                                                                  ::process::nodes::businessaction3\
+                                                                  ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role7 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get tasks] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::rbacmodel::nodes::role9 array get tasks] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::rbacmodel::nodes::role1 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role2 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [::rbacmodel::nodes::role3 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names juniorroles]] "B C"}
+      {my lequal [::rbacmodel::nodes::role5 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role6 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role7 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get juniorroles] "G ::rbacmodel::nodes::role7"}
+      {my lequal [::rbacmodel::nodes::role9 array get juniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectJuniorRoles] ::rbacmodel::nodes::role4}
+      {my lequal [::rbacmodel::nodes::role6 getAllJuniorRoles] "::rbacmodel::nodes::role1 ::rbacmodel::nodes::role2\
+                                                                ::rbacmodel::nodes::role3 ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role1 getDirectSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3"}
+      {my lequal [::rbacmodel::nodes::role1 getAllSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3\
+                                                                ::rbacmodel::nodes::role4 ::rbacmodel::nodes::role5\
+                                                                ::rbacmodel::nodes::role6"}
+      {my lequal [::rbacmodel::nodes::role2 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role3 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names seniorroles]] "E F"}
+      {my lequal [::rbacmodel::nodes::role5 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role7 array get seniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role8 array get seniorroles] "I ::rbacmodel::nodes::role9"}
+      {my lequal [::rbacmodel::nodes::role9 array get seniorroles] ""}
+    }
+BA_SME_RH order add BA_SME_RH::SetSSDFail3 end
+
+
+::STORM::TestScenario BA_SME_RH::SetSSDFail4 \
+    -test_body {[::process setSMEConstraint T7 T6] success}\
+    -expected_result 0
+BA_SME_RH::SetSSDFail4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 array get sme] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] "T5 ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::rbacmodel::nodes::role1 array get tasks] "T6 ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role2 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role3 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role4 array get tasks] "T3 ::process::nodes::businessaction3"}
+      {my lequal [::rbacmodel::nodes::role5 array get tasks] "T7 ::process::nodes::businessaction7"}
+      {my lequal [::rbacmodel::nodes::role6 array get tasks] "T1 ::process::nodes::businessaction1"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectlyAssignedTasks] ::process::nodes::businessaction1}
+      {my lequal [::rbacmodel::nodes::role6 getAllAssignedTasks] "::process::nodes::businessaction1\
+                                                                  ::process::nodes::businessaction3\
+                                                                  ::process::nodes::businessaction6"}
+      {my lequal [::rbacmodel::nodes::role7 array get tasks] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get tasks] "T4 ::process::nodes::businessaction4"}
+      {my lequal [::rbacmodel::nodes::role9 array get tasks] "T2 ::process::nodes::businessaction2"}
+      {my lequal [::rbacmodel::nodes::role1 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role2 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [::rbacmodel::nodes::role3 array get juniorroles] "A ::rbacmodel::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names juniorroles]] "B C"}
+      {my lequal [::rbacmodel::nodes::role5 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role6 array get juniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role7 array get juniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role8 array get juniorroles] "G ::rbacmodel::nodes::role7"}
+      {my lequal [::rbacmodel::nodes::role9 array get juniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role6 getDirectJuniorRoles] ::rbacmodel::nodes::role4}
+      {my lequal [::rbacmodel::nodes::role6 getAllJuniorRoles] "::rbacmodel::nodes::role1 ::rbacmodel::nodes::role2\
+                                                                ::rbacmodel::nodes::role3 ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role1 getDirectSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3"}
+      {my lequal [::rbacmodel::nodes::role1 getAllSeniorRoles] "::rbacmodel::nodes::role2 ::rbacmodel::nodes::role3\
+                                                                ::rbacmodel::nodes::role4 ::rbacmodel::nodes::role5\
+                                                                ::rbacmodel::nodes::role6"}
+      {my lequal [::rbacmodel::nodes::role2 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [::rbacmodel::nodes::role3 array get seniorroles] "D ::rbacmodel::nodes::role4"}
+      {my lequal [lsort -dictionary [::rbacmodel::nodes::role4 array names seniorroles]] "E F"}
+      {my lequal [::rbacmodel::nodes::role5 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role6 array get seniorroles] ""}
+      {my lequal [::rbacmodel::nodes::role7 array get seniorroles] "H ::rbacmodel::nodes::role8"}
+      {my lequal [::rbacmodel::nodes::role8 array get seniorroles] "I ::rbacmodel::nodes::role9"}
+      {my lequal [::rbacmodel::nodes::role9 array get seniorroles] ""}
+    }
+BA_SME_RH order add BA_SME_RH::SetSSDFail4 end

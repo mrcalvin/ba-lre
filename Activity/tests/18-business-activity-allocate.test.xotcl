@@ -1,0 +1,381 @@
+
+::STORM::TestCase BA_Allocate \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::InitialNode Start
+      ::process addNode ::UML2::BusinessAction A
+      ::process addNode ::UML2::BusinessAction B
+      ::process addNode ::UML2::BusinessAction C
+      ::process addNode ::UML2::BusinessAction D
+      ::process addNode ::UML2::BusinessAction E
+      ::process addNode ::UML2::Action F
+      ::process addNode ::UML2::BusinessAction G
+      ::process addNode ::UML2::ActivityFinalNode End
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::InitialNode Start\
+	   ::UML2::BusinessAction A
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction A\
+	   ::UML2::BusinessAction B
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction B\
+	   ::UML2::BusinessAction C
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction C\
+	   ::UML2::BusinessAction D
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction D\
+	   ::UML2::BusinessAction E
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction E\
+	   ::UML2::Action F
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::Action F\
+	   ::UML2::BusinessAction G
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction G\
+	   ::UML2::ActivityFinalNode End
+      ::process setSubjectBinding A G
+      ::process setSubjectBinding D E
+      ::process setSubjectBinding E G
+      ::process setSMEConstraint A B
+      ::process setDMEConstraint B C
+      ::process setDMEConstraint C D
+      
+      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::process associated_rbac_model ::rbacmodel
+      ::rbacmodel addSubject Catherine
+      ::rbacmodel addSubject Monica
+      ::rbacmodel addSubject Sarah
+      ::rbacmodel addSubject Sophie
+      ::rbacmodel addRole R1
+      ::rbacmodel addRole R2
+      ::rbacmodel addRole R3
+      ::rbacmodel addRole R4
+      ::rbacmodel addJuniorRoleRelation R2 R1
+      ::rbacmodel addJuniorRoleRelation R4 R3
+      ::rbacmodel taskRoleAssign ::process A R1
+      ::rbacmodel taskRoleAssign ::process G R1
+      ::rbacmodel taskRoleAssign ::process D R2
+      ::rbacmodel taskRoleAssign ::process E R2
+      ::rbacmodel taskRoleAssign ::process B R3
+      ::rbacmodel taskRoleAssign ::process C R4
+      ::rbacmodel roleSubjectAssign R1 Sarah
+      ::rbacmodel roleSubjectAssign R2 Monica
+      ::rbacmodel roleSubjectAssign R3 Sophie
+      ::rbacmodel roleSubjectAssign R4 Catherine
+      ::rbacmodel setActiveRole Sarah R1
+      ::rbacmodel setActiveRole Monica R1
+      ::rbacmodel setActiveRole Sophie R3
+      ::rbacmodel setActiveRole Catherine R3
+      ::process ::myProcessInstance -initiating_subject Mark
+    } \
+    -cleanup_script {
+      ::process destroy
+      ::rbacmodel destroy
+    }
+
+::STORM::TestScenario BA_Allocate::Fail \
+    -test_body {[::myProcessInstance allocateBusinessAction A Sarah] success}\
+    -expected_result 0
+BA_Allocate::Fail preconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] ""}
+      {my lequal [::myProcessInstance initiating_subject] Mark}
+      {my lequal [::myProcessInstance initiating_role] ""}
+    }
+BA_Allocate::Fail postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] ""}
+    }
+BA_Allocate order add BA_Allocate::Fail end
+
+
+
+::STORM::TestScenario BA_Allocate::Fail2 \
+    -test_body {[::myProcessInstance allocateBusinessAction A Sophie] success}\
+    -expected_result 0
+BA_Allocate::Fail2 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] ""}
+    }
+BA_Allocate order add BA_Allocate::Fail2 end
+
+
+::STORM::TestScenario BA_Allocate::Fail3 \
+    -test_body {[::myProcessInstance allocateBusinessAction A Monica] success}\
+    -expected_result 0
+BA_Allocate::Fail3 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] ""}
+    }
+BA_Allocate order add BA_Allocate::Fail3 end
+
+
+::STORM::TestScenario BA_Allocate::Success \
+    -test_body {
+      ::rbacmodel setActiveRole Monica R2
+      [::myProcessInstance allocateBusinessAction A Monica] success}\
+    -expected_result 1
+BA_Allocate::Success postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Success end
+
+
+::STORM::TestScenario BA_Allocate::Success2 \
+    -test_body {[::myProcessInstance allocateBusinessAction A Monica] success}\
+    -expected_result 1
+BA_Allocate::Success2 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Success2 end
+
+
+::STORM::TestScenario BA_Allocate::Fail4 \
+    -test_body {[::myProcessInstance allocateBusinessAction A X] success}\
+    -expected_result 0
+BA_Allocate::Fail4 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Fail4 end
+
+
+::STORM::TestScenario BA_Allocate::Fail5 \
+    -test_body {[::myProcessInstance allocateBusinessAction X Monica] success}\
+    -expected_result 0
+BA_Allocate::Fail5 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Fail5 end
+
+
+::STORM::TestScenario BA_Allocate::Fail6 \
+    -test_body {[::myProcessInstance allocateBusinessAction A Sarah] success}\
+    -expected_result 0
+BA_Allocate::Fail6 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Fail6 end
+
+
+::STORM::TestScenario BA_Allocate::Fail7 \
+    -test_body {[::myProcessInstance allocateBusinessAction B Monica] success}\
+    -expected_result 0
+BA_Allocate::Fail7 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Fail7 end
+
+
+::STORM::TestScenario BA_Allocate::Success3 \
+    -test_body {[::myProcessInstance allocateBusinessAction B Catherine] success}\
+    -expected_result 1
+BA_Allocate::Success3 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] Catherine}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] R3}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Success3 end
+
+
+::STORM::TestScenario BA_Allocate::Fail8 \
+    -test_body {[::myProcessInstance allocateBusinessAction C Catherine] success}\
+    -expected_result 0
+BA_Allocate::Fail8 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] Catherine}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] R3}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Fail8 end
+
+
+::STORM::TestScenario BA_Allocate::Fail9 \
+    -test_body {
+      ::rbacmodel setActiveRole Catherine R4
+      [::myProcessInstance allocateBusinessAction C Catherine] success}\
+    -expected_result 0
+BA_Allocate::Fail9 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] Catherine}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] R3}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] ""}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Fail9 end
+
+
+::STORM::TestScenario BA_Allocate::Success4 \
+    -test_body {
+      ::rbacmodel addSubject Jessica
+      ::rbacmodel roleSubjectAssign R4 Jessica
+      ::rbacmodel setActiveRole Jessica R4
+      [::myProcessInstance allocateBusinessAction C Jessica] success}\
+    -expected_result 1
+BA_Allocate::Success4 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] Catherine}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] Jessica}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] R3}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] R4}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Success4 end
+
+
+::STORM::TestScenario BA_Allocate::Success5 \
+    -test_body {[::myProcessInstance allocateBusinessAction D Monica] success}\
+    -expected_result 1
+BA_Allocate::Success5 postconditions assign\
+    { {my lequal [::myProcessInstance::nodes::businessaction11 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_subject] Catherine}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_subject] Jessica}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_subject] Monica}
+      {my lequal [::myProcessInstance::nodes::businessaction11 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction21 executing_role] R3}
+      {my lequal [::myProcessInstance::nodes::businessaction31 executing_role] R4}
+      {my lequal [::myProcessInstance::nodes::businessaction41 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction51 executing_role] R2}
+      {my lequal [::myProcessInstance::nodes::businessaction61 executing_role] R2}
+    }
+BA_Allocate order add BA_Allocate::Success5 end

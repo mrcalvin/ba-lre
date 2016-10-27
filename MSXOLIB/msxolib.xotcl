@@ -1,0 +1,78 @@
+#######################################
+# MSXOLIB
+#
+# A library of helper classes
+#
+#(c) Mark Strembeck
+#######################################
+
+
+package provide MSXOLIB 0.1.1
+
+package require XOTcl
+namespace import -force ::xotcl::*
+
+namespace eval ::msxolib {
+
+######################################################
+# ::msxolib::OrderedSet -superclass ::xotcl::Attribute
+######################################################
+
+::xotcl::MetaSlot create OrderedSet -superclass ::xotcl::Attribute
+
+OrderedSet instproc init args {
+  my multivalued true
+  if {![my exists default]} { my default {} }
+  next
+}
+
+OrderedSet instproc add {domain var value} {
+  set l [$domain set $var]
+  set l [lsort -unique -dictionary [lappend l $value]]
+  $domain set $var $l
+}
+
+OrderedSet instproc delete {domain var value} {
+  set l [$domain set $var]
+  set i [lsearch -exact $l $value]
+  if {$i != -1} { set l [lreplace $l $i $i] }
+  $domain set $var $l
+}
+
+########################################################
+# ::msxolib::SingleValued -superclass ::xotcl::Attribute
+########################################################
+
+::xotcl::MetaSlot create SingleValued -superclass ::xotcl::Attribute
+
+SingleValued instproc init args {
+  # multivalued is set to true to fool the foolish slot optimizer
+  my multivalued true
+  if {![my exists default]} { my default {} }
+  next
+}
+
+SingleValued instproc add {domain var value} {
+  $domain set $var $value
+}
+
+####################################################
+# ::msxolib::FunctionResult
+####################################################
+
+  # success          = boolean value
+  # result           = a function result (an arbitrary string)
+  # object_name      = name of an object (namespace tail) or an unique id
+  # object_reference = fully-qualified object name
+  # comment          = a human-readable comment
+
+::xotcl::Class FunctionResult -slots {
+  Attribute success -default {}
+  Attribute result -default {}
+  Attribute object_name -default {}
+  Attribute object_reference -default {}
+  Attribute comment -default {}
+}
+
+} 
+# ::msxolib namespace ends here

@@ -1,0 +1,2403 @@
+
+::STORM::TestCase BA_ControlNodesDecisionMergeOF \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::InitialNode Start
+      ::process addNode ::UML2::BusinessAction A
+      ::process addNode ::UML2::BusinessAction B
+      ::process addNode ::UML2::BusinessAction C
+      ::process addNode ::UML2::BusinessAction D
+      ::process addNode ::UML2::ActivityFinalNode End
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::InitialNode Start\
+	   ::UML2::BusinessAction A
+      ::process addNode ::UML2::DecisionNode DN
+      ::process addNode ::UML2::MergeNode MN
+    } \
+    -cleanup_script {
+      ::process destroy
+    }
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess\
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		    ::UML2::BusinessAction A\
+		    ::UML2::DecisionNode DN] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::activityfinalnode1\
+								    ::process::nodes::businessaction1\
+								    ::process::nodes::businessaction2\
+								    ::process::nodes::businessaction3\
+								    ::process::nodes::businessaction4\
+								    ::process::nodes::decisionnode1\
+								    ::process::nodes::initialnode1\
+								    ::process::nodes::mergenode1]}
+      {my lequal [::process::edges info children] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 name] DN}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 name] MN}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddObjFlowFail\
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		     ::UML2::BusinessAction A\
+		     ::UML2::DecisionNode DN] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF::AddObjFlowFail preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+ }
+BA_ControlNodesDecisionMergeOF::AddObjFlowFail postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjFlowFail end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddControlFlowFail\
+    -test_body {[::process addEdge ::UML2::ControlFlow\
+		     ::UML2::BusinessAction A\
+		     ::UML2::DecisionNode DN] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+ }
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddControlFlowFail end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddControlFlowFail2\
+    -test_body {[::process addEdge ::UML2::ControlFlow\
+		::UML2::DecisionNode DN\
+		::UML2::BusinessAction B] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail2 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+ }
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddControlFlowFail2 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess2\
+    -test_body {::process addEdge ::UML2::ObjectFlow\
+		::UML2::DecisionNode DN\
+		::UML2::BusinessAction B
+	 	[::process addEdge ::UML2::ObjectFlow\
+		::UML2::DecisionNode DN\
+		::UML2::BusinessAction C] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess2 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+ }
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess2 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess3\
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		::UML2::BusinessAction B\
+		::UML2::MergeNode MN] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess3 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess3 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess3 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddControlFlowFail3\
+    -test_body {[::process addEdge ::UML2::ControlFlow\
+		::UML2::BusinessAction C\
+		::UML2::MergeNode MN] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail3 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail3 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddControlFlowFail3 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddControlFlowFail4\
+    -test_body {[::process addEdge ::UML2::ControlFlow\
+		::UML2::MergeNode MN\
+		::UML2::BusinessAction D] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail4 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF::AddControlFlowFail4 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddControlFlowFail4 end
+
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess4\
+    -test_body {::process addEdge ::UML2::ObjectFlow\
+		::UML2::BusinessAction C\
+		::UML2::MergeNode MN
+		[::process addEdge ::UML2::ObjectFlow\
+		::UML2::MergeNode MN\
+		::UML2::BusinessAction D] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess4 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess4 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4\
+									   ::process::edges::objectflow5\
+									   ::process::edges::objectflow6]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ::process::edges::objectflow5}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] "::process::edges::objectflow4 ::process::edges::objectflow5"}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow5 source] C}
+      {my lequal [::process::edges::objectflow5 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow5 target] MN}      
+      {my lequal [::process::edges::objectflow5 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow5 source_navigable] 0}
+      {my lequal [::process::edges::objectflow5 target_navigable] 1}
+      {my lequal [::process::edges::objectflow5 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow6 source] MN}
+      {my lequal [::process::edges::objectflow6 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow6 target] D}      
+      {my lequal [::process::edges::objectflow6 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow6 source_navigable] 0}
+      {my lequal [::process::edges::objectflow6 target_navigable] 1}
+      {my lequal [::process::edges::objectflow6 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjFlowSuccess4 end
+
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF::AddObjFlowFail2\
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		::UML2::MergeNode MN\
+		::UML2::BusinessAction D] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF::AddObjFlowFail2 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4\
+									   ::process::edges::objectflow5\
+									   ::process::edges::objectflow6]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ::process::edges::objectflow5}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] "::process::edges::objectflow4 ::process::edges::objectflow5"}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow5 source] C}
+      {my lequal [::process::edges::objectflow5 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow5 target] MN}      
+      {my lequal [::process::edges::objectflow5 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow5 source_navigable] 0}
+      {my lequal [::process::edges::objectflow5 target_navigable] 1}
+      {my lequal [::process::edges::objectflow5 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow6 source] MN}
+      {my lequal [::process::edges::objectflow6 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow6 target] D}      
+      {my lequal [::process::edges::objectflow6 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow6 source_navigable] 0}
+      {my lequal [::process::edges::objectflow6 target_navigable] 1}
+      {my lequal [::process::edges::objectflow6 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF::AddObjFlowFail2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4\
+									   ::process::edges::objectflow5\
+									   ::process::edges::objectflow6]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ::process::edges::objectflow5}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow2 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] "::process::edges::objectflow4 ::process::edges::objectflow5"}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] A}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] DN}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] DN}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 target] B}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] B}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 target] MN}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow5 source] C}
+      {my lequal [::process::edges::objectflow5 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow5 target] MN}      
+      {my lequal [::process::edges::objectflow5 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow5 source_navigable] 0}
+      {my lequal [::process::edges::objectflow5 target_navigable] 1}
+      {my lequal [::process::edges::objectflow5 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow6 source] MN}
+      {my lequal [::process::edges::objectflow6 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow6 target] D}      
+      {my lequal [::process::edges::objectflow6 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow6 source_navigable] 0}
+      {my lequal [::process::edges::objectflow6 target_navigable] 1}
+      {my lequal [::process::edges::objectflow6 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjFlowFail2 end
+
+
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+
+
+::STORM::TestCase BA_ControlNodesDecisionMergeOF2 \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::InitialNode Start
+      ::process addNode ::UML2::BusinessAction A
+      ::process addNode ::UML2::BusinessAction B
+      ::process addNode ::UML2::BusinessAction C
+      ::process addNode ::UML2::BusinessAction D
+      ::process addNode ::UML2::ActivityFinalNode End
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::InitialNode Start\
+	   ::UML2::BusinessAction A
+      ::process addNode ::UML2::DecisionNode DN
+      ::process addNode ::UML2::MergeNode MN
+    } \
+    -cleanup_script {
+      ::process destroy
+    }
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess\
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		::UML2::DecisionNode DN\
+		::UML2::BusinessAction B] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::activityfinalnode1\
+								    ::process::nodes::businessaction1\
+								    ::process::nodes::businessaction2\
+								    ::process::nodes::businessaction3\
+								    ::process::nodes::businessaction4\
+								    ::process::nodes::decisionnode1\
+								    ::process::nodes::initialnode1\
+								    ::process::nodes::mergenode1]}
+      {my lequal [::process::edges info children] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ""}
+      {my lequal [::process::nodes::decisionnode1 name] DN}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 name] MN}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2 order add BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF2::AddControlFlowFail\
+    -test_body {[::process addEdge ::UML2::ControlFlow\
+		::UML2::BusinessAction A\
+		::UML2::DecisionNode DN] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF2::AddControlFlowFail preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2::AddControlFlowFail postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2 order add BA_ControlNodesDecisionMergeOF2::AddControlFlowFail end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF2::AddControlFlowFail2\
+    -test_body {[::process addEdge ::UML2::ControlFlow\
+		     ::UML2::DecisionNode DN\
+		     ::UML2::BusinessAction C] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF2::AddControlFlowFail2 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2::AddControlFlowFail2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2 order add BA_ControlNodesDecisionMergeOF2::AddControlFlowFail2 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess2\
+    -test_body {::process addEdge ::UML2::ObjectFlow\
+		::UML2::BusinessAction A\
+		::UML2::DecisionNode DN
+		::process addEdge ::UML2::ObjectFlow\
+		::UML2::DecisionNode DN\
+		::UML2::BusinessAction C
+		[::process addEdge ::UML2::ObjectFlow\
+		::UML2::MergeNode MN\
+		::UML2::BusinessAction D] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess2 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ""}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ""}
+      {my lequal [::process::nodes::decisionnode1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ""}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] A}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] DN}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] MN}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 target] D}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2 order add BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess2 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF2::AddControlFlowFail3\
+    -test_body { [::process addEdge ::UML2::ControlFlow\
+		::UML2::BusinessAction B\
+		::UML2::MergeNode MN] success}\
+    -expected_result 0
+BA_ControlNodesDecisionMergeOF2::AddControlFlowFail3 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] A}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] DN}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] MN}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 target] D}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2::AddControlFlowFail3 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] A}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] DN}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] MN}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 target] D}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2 order add BA_ControlNodesDecisionMergeOF2::AddControlFlowFail3 end
+
+
+::STORM::TestScenario BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess3\
+    -test_body {::process addEdge ::UML2::ObjectFlow\
+		::UML2::BusinessAction B\
+		::UML2::MergeNode MN
+		[::process addEdge ::UML2::ObjectFlow\
+		::UML2::BusinessAction C\
+		::UML2::MergeNode MN] success}\
+    -expected_result 1
+BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess3 preconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] ""}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] A}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] DN}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] MN}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 target] D}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess3 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list  ::process::nodes::activityfinalnode1\
+									   ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3\
+									   ::process::nodes::businessaction4\
+									   ::process::nodes::decisionnode1\
+									   ::process::nodes::initialnode1\
+									   ::process::nodes::mergenode1]}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2\
+									   ::process::edges::objectflow3\
+									   ::process::edges::objectflow4\
+									   ::process::edges::objectflow5\
+									   ::process::edges::objectflow6]}
+      {my lequal [::process::nodes::initialnode1 info class] ::UML2::InitialNode}
+      {my lequal [::process::nodes::initialnode1 outgoing] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::initialnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction1 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow1}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::businessaction1 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction2 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::objectflow5}
+      {my lequal [::process::nodes::businessaction2 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction3 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::objectflow3}
+      {my lequal [::process::nodes::businessaction3 outgoing] ::process::edges::objectflow6}
+      {my lequal [::process::nodes::businessaction3 owning_graph] ::process}
+      {my lequal [::process::nodes::businessaction4 info class] ::UML2::BusinessAction}
+      {my lequal [::process::nodes::businessaction4 incoming] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::businessaction4 outgoing] ""}
+      {my lequal [::process::nodes::businessaction4 owning_graph] ::process}
+      {my lequal [::process::nodes::decisionnode1 info class] ::UML2::DecisionNode}
+      {my lequal [::process::nodes::decisionnode1 incoming] ::process::edges::objectflow2}
+      {my lequal [::process::nodes::decisionnode1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow3"}
+      {my lequal [::process::nodes::decisionnode1 owning_graph] ::process}
+      {my lequal [::process::nodes::mergenode1 info class] ::UML2::MergeNode}
+      {my lequal [::process::nodes::mergenode1 incoming] "::process::edges::objectflow5 ::process::edges::objectflow6"}
+      {my lequal [::process::nodes::mergenode1 outgoing] ::process::edges::objectflow4}
+      {my lequal [::process::nodes::mergenode1 owning_graph] ::process}
+      {my lequal [::process::nodes::activityfinalnode1 info class] ::UML2::ActivityFinalNode}
+      {my lequal [::process::nodes::activityfinalnode1 incoming] ""}
+      {my lequal [::process::nodes::activityfinalnode1 owning_graph] ::process}
+      {my lequal [::process::edges::controlflow1 source] Start}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::InitialNode}
+      {my lequal [::process::edges::controlflow1 target] A}      
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 source_navigable] 0}
+      {my lequal [::process::edges::controlflow1 target_navigable] 1}
+      {my lequal [::process::edges::controlflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow1 source] DN}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow1 target] B}      
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 source_navigable] 0}
+      {my lequal [::process::edges::objectflow1 target_navigable] 1}
+      {my lequal [::process::edges::objectflow1 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow2 source] A}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] DN}      
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow2 source_navigable] 0}
+      {my lequal [::process::edges::objectflow2 target_navigable] 1}
+      {my lequal [::process::edges::objectflow2 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow3 source] DN}
+      {my lequal [::process::edges::objectflow3 source_type] ::UML2::DecisionNode}
+      {my lequal [::process::edges::objectflow3 target] C}      
+      {my lequal [::process::edges::objectflow3 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow3 source_navigable] 0}
+      {my lequal [::process::edges::objectflow3 target_navigable] 1}
+      {my lequal [::process::edges::objectflow3 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow4 source] MN}
+      {my lequal [::process::edges::objectflow4 source_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow4 target] D}      
+      {my lequal [::process::edges::objectflow4 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow4 source_navigable] 0}
+      {my lequal [::process::edges::objectflow4 target_navigable] 1}
+      {my lequal [::process::edges::objectflow4 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow5 source] B}
+      {my lequal [::process::edges::objectflow5 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow5 target] MN}
+      {my lequal [::process::edges::objectflow5 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow5 source_navigable] 0}
+      {my lequal [::process::edges::objectflow5 target_navigable] 1}
+      {my lequal [::process::edges::objectflow5 owning_graph] ::process}
+      {my lequal [::process::edges::objectflow6 source] C}
+      {my lequal [::process::edges::objectflow6 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow6 target] MN}      
+      {my lequal [::process::edges::objectflow6 target_type] ::UML2::MergeNode}
+      {my lequal [::process::edges::objectflow6 source_navigable] 0}
+      {my lequal [::process::edges::objectflow6 target_navigable] 1}
+      {my lequal [::process::edges::objectflow6 owning_graph] ::process}
+    }
+BA_ControlNodesDecisionMergeOF2 order add BA_ControlNodesDecisionMergeOF2::AddObjFlowSuccess3 end

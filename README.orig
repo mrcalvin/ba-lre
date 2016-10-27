@@ -1,0 +1,29 @@
+
+
+The BusinessActivity library and runtime engine is implemented with
+eXtended Object Tcl (XOTcl) and can be integrated with applications
+providing C or Tcl linkage.
+
+Version 0.2.1 requires: XOTcl version 1.6.6 or higher
+	- http://www.xotcl.org
+	- http://next-scripting.org/
+
+Unpack the archive in your "/usr/lib" directory or another directory
+of your choice (note that the archive unpacks to the
+"./BusinessActivitiesLRE-x.y.z" sub-directory when unpacked with 
+"tar xvzf BusinessActivitiesLRE-ver-x.y.z.tar.gz").
+
+To run the test cases go to the "./BusinessActivitiesLRE-x.y.z/Activity/tests/" 
+subdirectory and type "xotclsh activity-testsuite.xotcl" or 
+"tclsh activity-testsuite.xotcl" (make sure that all relevant packages and
+libraries are found in the "auto_path")
+
+More information including a number of related publications can be found at:
+
+http://wi.wu-wien.ac.at/home/mark/BusinessActivities/
+
+Please report bugs and problems to:
+
+strembeck@acm.org or 
+strembeck@computer.org or 
+mark.strembeck@wu.ac.at

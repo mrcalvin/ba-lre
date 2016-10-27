@@ -1,0 +1,768 @@
+
+::STORM::TestCase BA_MEX_SBind \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::BusinessAction A
+      ::process addNode ::UML2::BusinessAction B
+      ::process addNode ::UML2::BusinessAction C
+      ::process addNode ::UML2::BusinessAction D
+      ::process addNode ::UML2::BusinessAction E
+      ::process addNode ::UML2::BusinessAction F
+      ::process addNode ::UML2::BusinessAction G
+      ::process addNode ::UML2::ActivityFinalNode H
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction A\
+	   ::UML2::BusinessAction B
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction B\
+	   ::UML2::BusinessAction C
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction C\
+	   ::UML2::BusinessAction D
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction D\
+	   ::UML2::BusinessAction E
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction E\
+	   ::UML2::BusinessAction F
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction F\
+	   ::UML2::BusinessAction G
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction G\
+	   ::UML2::ActivityFinalNode H
+      ::process setSubjectBinding A G
+      ::process setSubjectBinding D E
+      ::process setSubjectBinding E G
+      ::process setSMEConstraint A B
+      ::process setDMEConstraint B C
+    } \
+    -cleanup_script {
+      ::process destroy
+    }
+
+::STORM::TestScenario BA_MEX_SBind::SetSSDFail \
+    -test_body {[::process setSMEConstraint A G] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSSDFail preconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind::SetSSDFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSSDFail end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSSDFail2 \
+    -test_body {[::process setSMEConstraint G A] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSSDFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSSDFail2 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSSDFail3 \
+    -test_body {[::process setSMEConstraint A D] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSSDFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSSDFail3 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSSDFail4 \
+    -test_body {[::process setSMEConstraint A E] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSSDFail4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSSDFail4 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetDSDFail \
+    -test_body {[::process setDMEConstraint A G] success}\
+    -expected_result 0
+BA_MEX_SBind::SetDSDFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetDSDFail end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetDSDFail2 \
+    -test_body {[::process setDMEConstraint A E] success}\
+    -expected_result 0
+BA_MEX_SBind::SetDSDFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetDSDFail2 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetDSDFail3 \
+    -test_body {[::process setDMEConstraint A D] success}\
+    -expected_result 0
+BA_MEX_SBind::SetDSDFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetDSDFail3 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetDSDFail4 \
+    -test_body {[::process setDMEConstraint D A] success}\
+    -expected_result 0
+BA_MEX_SBind::SetDSDFail4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetDSDFail4 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail \
+    -test_body {[::process setSubjectBinding A B] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail2 \
+    -test_body {[::process setSubjectBinding B D] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail2 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail3 \
+    -test_body {[::process setSubjectBinding D B] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail3 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail4 \
+    -test_body {[::process setSubjectBinding E B] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail4 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail5 \
+    -test_body {[::process setSubjectBinding B G] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail5 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail5 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail6 \
+    -test_body {[::process setSubjectBinding B C] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail6 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 array get dme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail6 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail7 \
+    -test_body {
+      ::process setDMEConstraint C D
+      [::process setSubjectBinding C D] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail7 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction3 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail7 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail8 \
+    -test_body {[::process setSubjectBinding C E] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail8 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction3 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail8 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail9 \
+    -test_body {[::process setSubjectBinding E C] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail9 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction3 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail9 end
+
+
+::STORM::TestScenario BA_MEX_SBind::SetSBindFail10 \
+    -test_body {[::process setSubjectBinding C G] success}\
+    -expected_result 0
+BA_MEX_SBind::SetSBindFail10 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get subjectbinding] "G ::process::nodes::businessaction7"}
+      {my lequal [::process::nodes::businessaction2 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get subjectbinding] "E ::process::nodes::businessaction5"}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction5 set subjectbinding(G)] ::process::nodes::businessaction7}
+      {my lequal [::process::nodes::businessaction6 array get subjectbinding] ""}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction7 set subjectbinding(E)] ::process::nodes::businessaction5}
+      {my lequal [::process::nodes::businessaction1 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction2 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction3 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction4 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction5 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction6 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction7 array get rolebinding] ""}
+      {my lequal [::process::nodes::businessaction1 array get sme] "B ::process::nodes::businessaction2"}
+      {my lequal [::process::nodes::businessaction2 array get sme] "A ::process::nodes::businessaction1"}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction5 array get sme] ""}
+      {my lequal [::process::nodes::businessaction6 array get sme] ""}
+      {my lequal [::process::nodes::businessaction7 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction3 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 array get dme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction5 array get dme] ""}
+      {my lequal [::process::nodes::businessaction6 array get dme] ""}
+      {my lequal [::process::nodes::businessaction7 array get dme] ""}
+    }
+BA_MEX_SBind order add BA_MEX_SBind::SetSBindFail10 end
+
+
+
+

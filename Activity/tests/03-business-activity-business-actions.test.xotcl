@@ -1,0 +1,176 @@
+
+::STORM::TestCase BA_BusinessActions \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+    } \
+    -cleanup_script {
+      ::process destroy
+    }
+
+::STORM::TestScenario BA_BusinessActions::AddBASuccess \
+    -test_body {[::process addNode ::UML2::BusinessAction] success}\
+    -expected_result 1
+BA_BusinessActions::AddBASuccess preconditions add {my lequal [::process::nodes info children] ""}
+BA_BusinessActions::AddBASuccess postconditions assign\
+    { {my lequal [::process::nodes info children] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+    }
+BA_BusinessActions order add BA_BusinessActions::AddBASuccess end
+
+
+::STORM::TestScenario BA_BusinessActions::AddBASuccess2 \
+    -test_body {
+      ::process addNode ::UML2::BusinessAction X
+      [::process addNode ::UML2::BusinessAction] success}\
+    -expected_result 1
+BA_BusinessActions::AddBASuccess2 preconditions assign\
+    { {my lequal [::process::nodes info children] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+    }
+BA_BusinessActions::AddBASuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3]}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+      {my lequal [::process::nodes::businessaction2 name] X}
+      {my lequal [::process::nodes::businessaction3 name] businessaction3}
+    }
+BA_BusinessActions order add BA_BusinessActions::AddBASuccess2 end
+
+
+::STORM::TestScenario BA_BusinessActions::AddBAFail \
+    -test_body {[::process addNode ::UML2::BusinessAction X] success}\
+    -expected_result 0
+BA_BusinessActions::AddBAFail postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3]}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+      {my lequal [::process::nodes::businessaction2 name] X}
+      {my lequal [::process::nodes::businessaction3 name] businessaction3}
+    }
+BA_BusinessActions order add BA_BusinessActions::AddBAFail end
+
+
+::STORM::TestScenario BA_BusinessActions::AddOFSuccess \
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		     ::UML2::BusinessAction businessaction1\
+		     ::UML2::BusinessAction X] success}\
+    -expected_result 1
+BA_BusinessActions::AddOFSuccess preconditions assign\
+    { {my lequal [::process::edges info children] ""} 
+      {my lequal [::process::nodes::businessaction1 incoming] ""}
+      {my lequal [::process::nodes::businessaction1 outgoing] ""}
+      {my lequal [::process::nodes::businessaction2 incoming] ""}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+    }
+BA_BusinessActions::AddOFSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3]}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+      {my lequal [::process::nodes::businessaction2 name] X}
+      {my lequal [::process::nodes::businessaction3 name] businessaction3}
+      {my lequal [::process::nodes::businessaction1 incoming] ""}
+      {my lequal [::process::nodes::businessaction1 outgoing] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 incoming] ::process::edges::objectflow1}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [::process::edges info children] ::process::edges::objectflow1}
+      {my lequal [::process::edges::objectflow1 name] objectflow1}
+      {my lequal [::process::edges::objectflow1 source] businessaction1}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] X}
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+    }
+BA_BusinessActions order add BA_BusinessActions::AddOFSuccess end
+
+
+::STORM::TestScenario BA_BusinessActions::AddOFSuccess2 \
+    -test_body {[::process addEdge ::UML2::ObjectFlow\
+		     ::UML2::BusinessAction businessaction1\
+		     ::UML2::BusinessAction X] success}\
+    -expected_result 1
+BA_BusinessActions::AddOFSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3]}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+      {my lequal [::process::nodes::businessaction2 name] X}
+      {my lequal [::process::nodes::businessaction3 name] businessaction3}
+      {my lequal [::process::nodes::businessaction1 incoming] ""}
+      {my lequal [::process::nodes::businessaction1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow2"}
+      {my lequal [::process::nodes::businessaction2 incoming] "::process::edges::objectflow1 ::process::edges::objectflow2"}
+      {my lequal [::process::nodes::businessaction2 outgoing] ""}
+      {my lequal [::process::nodes::businessaction3 incoming] ""}
+      {my lequal [::process::nodes::businessaction3 outgoing] ""}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::objectflow1\
+									   ::process::edges::objectflow2]}
+      {my lequal [::process::edges::objectflow1 name] objectflow1}
+      {my lequal [::process::edges::objectflow1 source] businessaction1}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] X}
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 name] objectflow2}
+      {my lequal [::process::edges::objectflow2 source] businessaction1}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] X}
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+    }
+BA_BusinessActions order add BA_BusinessActions::AddOFSuccess2 end
+
+
+::STORM::TestScenario BA_BusinessActions::AddCFSuccess \
+    -test_body {
+      ::process addEdge ::UML2::ControlFlow\
+		     ::UML2::BusinessAction X\
+		     ::UML2::BusinessAction businessaction3
+      [::process addEdge ::UML2::ControlFlow\
+		     ::UML2::BusinessAction businessaction3\
+		     ::UML2::BusinessAction businessaction1] success}\
+    -expected_result 1
+BA_BusinessActions::AddCFSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::process::nodes info children]] [list ::process::nodes::businessaction1\
+									   ::process::nodes::businessaction2\
+									   ::process::nodes::businessaction3]}
+      {my lequal [::process::nodes::businessaction1 name] businessaction1}
+      {my lequal [::process::nodes::businessaction2 name] X}
+      {my lequal [::process::nodes::businessaction3 name] businessaction3}
+      {my lequal [::process::nodes::businessaction1 incoming] ::process::edges::controlflow2}
+      {my lequal [::process::nodes::businessaction1 outgoing] "::process::edges::objectflow1 ::process::edges::objectflow2"}
+      {my lequal [::process::nodes::businessaction2 incoming] "::process::edges::objectflow1 ::process::edges::objectflow2"}
+      {my lequal [::process::nodes::businessaction2 outgoing] ::process::edges::controlflow1}
+      {my lequal [[::process::nodes::businessaction2 outgoing] name] controlflow1}
+      {my lequal [::process::nodes::businessaction3 incoming] ::process::edges::controlflow1}
+      {my lequal [[::process::nodes::businessaction3 incoming] name] controlflow1}
+      {my lequal [::process::nodes::businessaction3 outgoing] ::process::edges::controlflow2}
+      {my lequal [lsort -dictionary [::process::edges info children]] [list ::process::edges::controlflow1\
+									   ::process::edges::controlflow2\
+									   ::process::edges::objectflow1\
+									   ::process::edges::objectflow2]}
+      {my lequal [::process::edges::objectflow1 name] objectflow1}
+      {my lequal [::process::edges::objectflow1 source] businessaction1}
+      {my lequal [::process::edges::objectflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow1 target] X}
+      {my lequal [::process::edges::objectflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 name] objectflow2}
+      {my lequal [::process::edges::objectflow2 source] businessaction1}
+      {my lequal [::process::edges::objectflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::objectflow2 target] X}
+      {my lequal [::process::edges::objectflow2 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 name] controlflow1}
+      {my lequal [::process::edges::controlflow1 source] X}
+      {my lequal [::process::edges::controlflow1 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow1 target] businessaction3}
+      {my lequal [::process::edges::controlflow1 target_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow2 name] controlflow2}
+      {my lequal [::process::edges::controlflow2 source] businessaction3}
+      {my lequal [::process::edges::controlflow2 source_type] ::UML2::BusinessAction}
+      {my lequal [::process::edges::controlflow2 target] businessaction1}
+      {my lequal [::process::edges::controlflow2 target_type] ::UML2::BusinessAction}
+    }
+BA_BusinessActions order add BA_BusinessActions::AddCFSuccess end

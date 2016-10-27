@@ -1,0 +1,449 @@
+
+::STORM::TestCase BA_MutEx \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity ::process
+      ::process addNode ::UML2::BusinessAction A
+      ::process addNode ::UML2::BusinessAction B
+      ::process addNode ::UML2::BusinessAction C
+      ::process addNode ::UML2::BusinessAction D
+      ::process addNode ::UML2::ActivityFinalNode E
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction A\
+	   ::UML2::BusinessAction B
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction B\
+	   ::UML2::BusinessAction C
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction C\
+	   ::UML2::BusinessAction D
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction D\
+	   ::UML2::BusinessAction A
+      ::process addEdge ::UML2::ControlFlow\
+	   ::UML2::BusinessAction D\
+	   ::UML2::ActivityFinalNode E
+    } \
+    -cleanup_script {
+      ::process destroy
+    }
+
+::STORM::TestScenario BA_MutEx::SetSMESuccess \
+    -test_body {[::process setSMEConstraint A D] success}\
+    -expected_result 1
+BA_MutEx::SetSMESuccess preconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] ""}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+    }
+BA_MutEx::SetSMESuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] "A ::process::nodes::businessaction1"}
+    }
+BA_MutEx order add BA_MutEx::SetSMESuccess end
+
+
+::STORM::TestScenario BA_MutEx::SetSMESuccess2 \
+    -test_body {[::process setSMEConstraint A D] success}\
+    -expected_result 1
+BA_MutEx::SetSMESuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+    }
+BA_MutEx order add BA_MutEx::SetSMESuccess2 end
+
+
+::STORM::TestScenario BA_MutEx::SetSMESuccess3 \
+    -test_body {[::process setSMEConstraint D C] success}\
+    -expected_result 1
+BA_MutEx::SetSMESuccess3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+    }
+BA_MutEx order add BA_MutEx::SetSMESuccess3 end
+
+
+::STORM::TestScenario BA_MutEx::SetDMESuccess \
+    -test_body {[::process setDMEConstraint B D] success}\
+    -expected_result 1
+BA_MutEx::SetDMESuccess preconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+    }
+BA_MutEx::SetDMESuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMESuccess end
+
+
+::STORM::TestScenario BA_MutEx::SetDMESuccess2 \
+    -test_body {[::process setDMEConstraint B D] success}\
+    -expected_result 1
+BA_MutEx::SetDMESuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMESuccess2 end
+
+
+::STORM::TestScenario BA_MutEx::SetDMESuccess3 \
+    -test_body {[::process setDMEConstraint C B] success}\
+    -expected_result 1
+BA_MutEx::SetDMESuccess3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMESuccess3 end
+
+
+::STORM::TestScenario BA_MutEx::SetDMEFail \
+    -test_body {[::process setDMEConstraint D X] success}\
+    -expected_result 0
+BA_MutEx::SetDMEFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMEFail end
+
+
+::STORM::TestScenario BA_MutEx::SetDMEFail2 \
+    -test_body {[::process setDMEConstraint Y D] success}\
+    -expected_result 0
+BA_MutEx::SetDMEFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMEFail2 end
+
+
+
+::STORM::TestScenario BA_MutEx::SetDMEFail3 \
+    -test_body {[::process setDMEConstraint A D] success}\
+    -expected_result 0
+BA_MutEx::SetDMEFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMEFail3 end
+
+
+::STORM::TestScenario BA_MutEx::SetDMEFail4 \
+    -test_body {[::process setDMEConstraint A A] success}\
+    -expected_result 0
+BA_MutEx::SetDMEFail4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetDMEFail4 end
+
+
+::STORM::TestScenario BA_MutEx::SetSMEFail \
+    -test_body {[::process setSMEConstraint D X] success}\
+    -expected_result 0
+BA_MutEx::SetSMEFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetSMEFail end
+
+
+::STORM::TestScenario BA_MutEx::SetSMEFail2 \
+    -test_body {[::process setSMEConstraint Y D] success}\
+    -expected_result 0
+BA_MutEx::SetSMEFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetSMEFail2 end
+
+
+
+::STORM::TestScenario BA_MutEx::SetSMEFail3 \
+    -test_body {[::process setSMEConstraint B C] success}\
+    -expected_result 0
+BA_MutEx::SetSMEFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetSMEFail3 end
+
+
+::STORM::TestScenario BA_MutEx::SetSMEFail4 \
+    -test_body {[::process setSMEConstraint A A] success}\
+    -expected_result 0
+BA_MutEx::SetSMEFail4 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::SetSMEFail4 end
+
+
+::STORM::TestScenario BA_MutEx::UnsetSMEFail \
+    -test_body {[::process unsetSMEConstraint D X] success}\
+    -expected_result 0
+BA_MutEx::UnsetSMEFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetSMEFail end
+
+
+::STORM::TestScenario BA_MutEx::UnsetSMEFail2 \
+    -test_body {[::process unsetSMEConstraint Y D] success}\
+    -expected_result 0
+BA_MutEx::UnsetSMEFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetSMEFail2 end
+
+
+::STORM::TestScenario BA_MutEx::UnsetSMEFail3 \
+    -test_body {[::process unsetSMEConstraint B C] success}\
+    -expected_result 0
+BA_MutEx::UnsetSMEFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetSMEFail3 end
+
+
+::STORM::TestScenario BA_MutEx::UnsetDMEFail \
+    -test_body {[::process unsetDMEConstraint D X] success}\
+    -expected_result 0
+BA_MutEx::UnsetDMEFail postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetDMEFail end
+
+
+::STORM::TestScenario BA_MutEx::UnsetDMEFail2 \
+    -test_body {[::process unsetDMEConstraint Y D] success}\
+    -expected_result 0
+BA_MutEx::UnsetDMEFail2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetDMEFail2 end
+
+
+::STORM::TestScenario BA_MutEx::UnsetDMEFail3 \
+    -test_body {[::process unsetDMEConstraint A D] success}\
+    -expected_result 0
+BA_MutEx::UnsetDMEFail3 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 set dme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction2 set dme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction3 set dme(B)] ::process::nodes::businessaction2}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetDMEFail3 end
+
+
+::STORM::TestScenario BA_MutEx::UnsetDMESuccess \
+    -test_body {[::process unsetDMEConstraint B C] success}\
+    -expected_result 1
+BA_MutEx::UnsetDMESuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] "B ::process::nodes::businessaction2"}
+    }
+BA_MutEx order add BA_MutEx::UnsetDMESuccess end
+
+
+::STORM::TestScenario BA_MutEx::UnsetDMESuccess2 \
+    -test_body {[::process unsetDMEConstraint D B] success}\
+    -expected_result 1
+BA_MutEx::UnsetDMESuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 set sme(D)] ::process::nodes::businessaction4}
+      {my lequal [::process::nodes::businessaction4 set sme(A)] ::process::nodes::businessaction1}
+      {my lequal [::process::nodes::businessaction4 set sme(C)] ::process::nodes::businessaction3}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+    }
+BA_MutEx order add BA_MutEx::UnsetDMESuccess2 end
+
+
+::STORM::TestScenario BA_MutEx::UnsetSMESuccess \
+    -test_body {[::process unsetSMEConstraint D A] success}\
+    -expected_result 1
+BA_MutEx::UnsetSMESuccess postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] ""}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 array get sme] "D ::process::nodes::businessaction4"}
+      {my lequal [::process::nodes::businessaction4 array get sme] "C ::process::nodes::businessaction3"}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+    }
+BA_MutEx order add BA_MutEx::UnsetSMESuccess end
+
+
+::STORM::TestScenario BA_MutEx::UnsetSMESuccess2 \
+    -test_body {[::process unsetSMEConstraint D C] success}\
+    -expected_result 1
+BA_MutEx::UnsetSMESuccess2 postconditions assign\
+    { {my lequal [::process::nodes::businessaction1 array get sme] ""}
+      {my lequal [::process::nodes::businessaction2 array get sme] ""}
+      {my lequal [::process::nodes::businessaction3 array get sme] ""}
+      {my lequal [::process::nodes::businessaction4 array get sme] ""}
+      {my lequal [::process::nodes::businessaction1 array get dme] ""}
+      {my lequal [::process::nodes::businessaction2 array get dme] ""}
+      {my lequal [::process::nodes::businessaction3 array get dme] ""}
+      {my lequal [::process::nodes::businessaction4 array get dme] ""}
+    }
+BA_MutEx order add BA_MutEx::UnsetSMESuccess2 end

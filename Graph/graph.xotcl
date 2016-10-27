@@ -1,0 +1,183 @@
+#######################################
+# UML2::Graph
+#
+#(c) Mark Strembeck
+#
+# Most UML models/diagrams are essentially graphs (e.g. 
+# activity diagrams, class diagrams, state machines, etc.).
+# UML2::Graph is a convenience package to provide a basic
+# graph structure for other UML2 packages. Therefore, 
+# UML2::Graph instances are not intended to exist as
+# standalone objects, but provide the base structure
+# for packages that define actual UML2 models.
+#######################################
+
+package provide UML2::Graph 0.1.1
+
+package require XOTcl
+namespace import -force ::xotcl::*
+
+package require MSXOLIB
+
+namespace eval ::UML2 {
+
+Object ::UML2::resultobjects
+
+Class Graph -slots {
+  ::msxolib::SingleValued name
+  ::msxolib::OrderedSet valid_node_types
+  ::msxolib::OrderedSet valid_edge_types
+}
+
+Graph instproc init args {
+  ::xotcl::Object [self]::nodes
+  ::xotcl::Object [self]::edges
+  if {[my name] eq ""} { my name [self] }
+  next
+}
+
+Graph instproc addNode {type {name ""}} {
+  if {![my isValidNodeType $type]} {
+    return [::msxolib::FunctionResult [::xotcl::Object autoname result] -success 0\
+		-comment "[my info class] [self] [self proc] FAILED, << $type >> is not a valid node type\
+                          for [my info class]."]
+  }
+  if {$name eq ""} {
+    set new [$type [::xotcl::Object autoname [self]::nodes::[string tolower [namespace tail $type]]]]
+    $new name [namespace tail $new]
+  } else {
+    # here [string tolower [namespace tail $type]] determines an array name
+    if {![my exists [string tolower [namespace tail $type]]($name)]} {
+      set new [$type [::xotcl::Object autoname [self]::nodes::[string tolower [namespace tail $type]]]]
+      $new name $name
+    } else {
+      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+		  -comment "[my info class] [self] [self proc] FAILED, $type with name << $name >>\
+                            already exists in [my info class] << [my name] >>."]
+    }
+  }
+  $new owning_graph [self]
+  # here [string tolower [namespace tail $type]] determines an array name
+  my set [string tolower [namespace tail $type]]([$new name]) $new
+  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	      -object_name [$new name] -object_reference $new\
+	      -comment "[my info class] [self] [self proc], successfully added $type << [$new name] >>\
+                        to [my info class] << [my name] >>."]
+}
+
+Graph instproc isValidNodeType {type} {
+  if {[lsearch -exact [my valid_node_types] $type] != -1} {
+    return 1
+  }
+  return 0
+}
+
+Graph instproc addEdge {edgeType fromType from toType to {name ""}} {
+  if {![my isValidEdgeType $edgeType]} {
+    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+		-comment "[my info class] [self] [self proc] FAILED, << $edgeType >> is not a valid edge type\
+                          for [my info class]."]
+  }
+  foreach t "$fromType $toType" n "$from $to" {
+    if {![my existNode $t $n]} {
+      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+		  -comment "[my info class] [self] [self proc] FAILED, $t node << $n >> does not exist\
+                            in [my info class] << [my name] >>."]
+    }
+  }
+  set constructioncheck [my checkGraphConstructionRules $edgeType $fromType $from $toType $to]
+  if {![$constructioncheck success]} { 
+    return $constructioncheck 
+  }
+  if {$name eq ""} {
+    set new [$edgeType [::xotcl::Object autoname [self]::edges::[string tolower [namespace tail $edgeType]]]]
+    $new name [namespace tail $new]
+  } else {
+    # here [string tolower [namespace tail $edgeType]] determines an array name
+    if {![my exists [string tolower [namespace tail $edgeType]]($name)]} {
+      set new [$edgeType [::xotcl::Object autoname [self]::edges::[string tolower [namespace tail $edgeType]]]]
+      $new name $name
+    } else {
+      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+ 		  -comment "[my info class] [self] [self proc] FAILED, $edgeType with name << $name >>\
+                            already exists in [my info class] << [my name] >>."]
+    }
+  }
+  $new source $from
+  $new target $to
+  $new source_type $fromType
+  $new target_type $toType
+  $new owning_graph [self]
+  # here [string tolower [namespace tail $edgeType]] determines an array name
+  my set [string tolower [namespace tail $edgeType]]([$new name]) $new
+  [my getFQON $fromType $from] outgoing add $new
+  [my getFQON $toType $to] incoming add $new
+  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	      -object_name [$new name] -object_reference $new\
+	      -comment "[my info class] [self] [self proc], successfully added $edgeType << [$new name] >>\
+                        to [my info class] << [my name] >>."]
+}
+
+Graph instproc checkGraphConstructionRules {edgeType fromType from toType to} {
+  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	      -comment "[my info class] [self] [self proc], no specific construction rules for [my info class] graphs."]
+}
+
+Graph instproc addDirectedEdge {edgeType fromType from toType to {name ""}} {
+  set edge [my addEdge $edgeType $fromType $from $toType $to $name]
+  if {[$edge success]} {
+    [$edge object_reference] source_navigable 0
+  }
+  return $edge
+}
+
+Graph instproc isValidEdgeType {type} {
+  if {[lsearch -exact [my set valid_edge_types] $type] != -1} {
+    return 1
+  }
+  return 0
+}
+
+Graph instproc existNode {type name} {
+  if {![my isValidNodeType $type]} { return 0 }
+  if {[my exists [string tolower [namespace tail $type]]($name)]} { return 1 }
+  return 0
+}
+
+Graph instproc existEdge {type name} {
+  if {![my isValidEdgeType $type]} { return 0 }
+  if {[my exists [string tolower [namespace tail $type]]($name)]} { return 1 }
+  return 0
+}
+
+# get the fully-qualified object name of a node or edge object
+Graph instproc getFQON {type name} {
+  if {[my exists [string tolower [namespace tail $type]]($name)]} {
+    return [my set [string tolower [namespace tail $type]]($name)]
+  }
+  return ""
+}
+
+Class Graph::Node -slots {
+  ::msxolib::SingleValued name
+  ::msxolib::SingleValued owning_graph
+}
+Class Graph::Node::SingleIn -slots {::msxolib::SingleValued incoming}
+Class Graph::Node::SingleOut -slots {::msxolib::SingleValued outgoing}
+Class Graph::Node::MultiIn -slots {::msxolib::OrderedSet incoming}
+Class Graph::Node::MultiOut -slots {::msxolib::OrderedSet outgoing}
+
+Class Graph::Edge -slots {
+  ::msxolib::SingleValued name
+  ::msxolib::SingleValued source
+  ::msxolib::SingleValued target
+  ::msxolib::SingleValued source_type
+  ::msxolib::SingleValued target_type
+  ::msxolib::SingleValued source_navigable -default 1
+  ::msxolib::SingleValued target_navigable -default 1
+  ::msxolib::SingleValued owning_graph
+}
+
+
+}
+# ::UML2 namespace ends here

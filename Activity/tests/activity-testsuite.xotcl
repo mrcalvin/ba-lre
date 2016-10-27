@@ -1,0 +1,29 @@
+set auto_path ".. ../.. $auto_path"
+
+package require STORM 0.5
+
+# eliminate dublicate list elements while retaining element order
+proc luniqueorder {list} {
+  set nl ""
+  while {$list != ""} {
+    set l [lindex $list 0]
+    set list [lreplace $list 0 0]
+    if {[lsearch $nl $l] == -1} {
+      lappend nl $l
+    }
+  }
+  return $nl
+}
+
+set files [lsort -dictionary [glob -directory [pwd] *.test.xotcl]]
+foreach f $files {
+  if {[file isfile $f]} {
+    source $f
+    set o [join [lappend o [::STORM::TestCase info instances]]]
+  }
+}
+::STORM::TestSuite UML2ActivityTestSuite\
+    -detailed_report 1\
+    -order [luniqueorder $o]\
+    -setup_script { package require -exact UML2::BusinessActivity 0.1.2 }
+UML2ActivityTestSuite runAllTestCases

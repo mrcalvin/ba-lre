@@ -1,0 +1,360 @@
+
+::STORM::TestCase BA_RBAC_Roles \
+    -setup_script {
+      ::UML2::BusinessActivity::RBACModel ::rbac
+    } \
+    -cleanup_script {
+      ::rbac destroy
+    }
+
+# test of basic "role" functions
+
+::STORM::TestScenario BA_RBAC_Roles::AddRoleSuccess \
+    -test_body {[::rbac addRole A] success}\
+    -expected_result 1
+BA_RBAC_Roles::AddRoleSuccess preconditions add {my lequal [::rbac::nodes info children] ""}
+BA_RBAC_Roles::AddRoleSuccess postconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::role1}\
+      {my lequal [::rbac::nodes::role1 name] A}
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddRoleSuccess end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddRoleFail \
+    -test_body {[::rbac addRole A] success}\
+    -expected_result 0
+BA_RBAC_Roles::AddRoleFail preconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::role1}\
+      {my lequal [::rbac::nodes::role1 name] A}
+    }
+BA_RBAC_Roles::AddRoleFail postconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::role1}\
+      {my lequal [::rbac::nodes::role1 name] A}
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddRoleFail end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddNodeFail \
+    -test_body {[::rbac addNode A] success}\
+    -expected_result 0
+BA_RBAC_Roles::AddNodeFail preconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::role1}\
+      {my lequal [::rbac::nodes::role1 name] A}
+    }
+BA_RBAC_Roles::AddNodeFail postconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::role1}\
+      {my lequal [::rbac::nodes::role1 name] A}
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddNodeFail end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddNodeSuccess2 \
+    -test_body {[::rbac addRole B] success}\
+    -expected_result 1
+BA_RBAC_Roles::AddNodeSuccess2 preconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::role1}\
+      {my lequal [::rbac::nodes::role1 name] A}
+    }
+BA_RBAC_Roles::AddNodeSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddNodeSuccess2 end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddJuniorRelationSuccess \
+    -test_body {[::rbac addJuniorRoleRelation A B] success}\
+    -expected_result 1
+BA_RBAC_Roles::AddJuniorRelationSuccess preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ""}\
+      {my lequal [::rbac::nodes::role1 outgoing] ""}\
+      {my lequal [::rbac::nodes::role2 outgoing] ""}\
+      {my lequal [::rbac::nodes::role1 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] ""}\
+      {my lequal [::rbac::edges info children] ""}\
+    }
+BA_RBAC_Roles::AddJuniorRelationSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role2 outgoing] ""}\
+      {my lequal [::rbac::nodes::role1 array get juniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::edges info children] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddJuniorRelationSuccess end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddJuniorRelationSuccess2 \
+    -test_body {
+      ::rbac addRole C
+      ::rbac addRole D
+      [::rbac addJuniorRoleRelation B C] success}\
+    -expected_result 1
+BA_RBAC_Roles::AddJuniorRelationSuccess2 preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role2 outgoing] ""}\
+      {my lequal [::rbac::nodes::role1 array get juniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::edges info children] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles::AddJuniorRelationSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::role4]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role3 name] C}\
+      {my lequal [::rbac::nodes::role4 name] D}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role3 incoming] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role4 incoming] ""}\
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role3 outgoing] ""}\
+      {my lequal [::rbac::nodes::role4 outgoing] ""}\
+      {my lequal [::rbac::nodes::role1 array get juniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] "C ::rbac::nodes::role3"}\
+      {my lequal [::rbac::nodes::role3 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role4 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::nodes::role3 array get seniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role4 array get seniorroles] ""}\
+      {my lequal [::rbac::edges info children] [list ::rbac::edges::roletoroleassignment1\
+						    ::rbac::edges::roletoroleassignment2]}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 name] roletoroleassignment2}\
+      {my lequal [::rbac::edges::roletoroleassignment2 source] B }\
+      {my lequal [::rbac::edges::roletoroleassignment2 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 target] C }\
+      {my lequal [::rbac::edges::roletoroleassignment2 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddJuniorRelationSuccess2 end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddSeniorRelationSuccess \
+    -test_body {[::rbac addSeniorRoleRelation D A] success}\
+    -expected_result 1
+BA_RBAC_Roles::AddSeniorRelationSuccess preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::role4]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role3 name] C}\
+      {my lequal [::rbac::nodes::role4 name] D}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role3 incoming] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role4 incoming] ""}\
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role3 outgoing] ""}\
+      {my lequal [::rbac::nodes::role4 outgoing] ""}\
+      {my lequal [::rbac::nodes::role1 array get juniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] "C ::rbac::nodes::role3"}\
+      {my lequal [::rbac::nodes::role3 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role4 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::nodes::role3 array get seniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role4 array get seniorroles] ""}\
+      {my lequal [::rbac::edges info children] [list ::rbac::edges::roletoroleassignment1\
+						    ::rbac::edges::roletoroleassignment2]}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 name] roletoroleassignment2}\
+      {my lequal [::rbac::edges::roletoroleassignment2 source] B }\
+      {my lequal [::rbac::edges::roletoroleassignment2 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 target] C }\
+      {my lequal [::rbac::edges::roletoroleassignment2 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles::AddSeniorRelationSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::role4]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role3 name] C}\
+      {my lequal [::rbac::nodes::role4 name] D}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role3 incoming] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role4 incoming] ::rbac::edges::roletoroleassignment3}\
+      {my lequal [::rbac::nodes::role1 outgoing] "::rbac::edges::roletoroleassignment1 ::rbac::edges::roletoroleassignment3"}\
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role3 outgoing] ""}\
+      {my lequal [::rbac::nodes::role4 outgoing] ""}\
+      {my lequal [lsort -dictionary [::rbac::nodes::role1 array names juniorroles]] "B D"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] "C ::rbac::nodes::role3"}\
+      {my lequal [::rbac::nodes::role3 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role4 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::nodes::role3 array get seniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role4 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::edges info children] [list ::rbac::edges::roletoroleassignment1\
+						    ::rbac::edges::roletoroleassignment2\
+						    ::rbac::edges::roletoroleassignment3]}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 name] roletoroleassignment2}\
+      {my lequal [::rbac::edges::roletoroleassignment2 source] B }\
+      {my lequal [::rbac::edges::roletoroleassignment2 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 target] C }\
+      {my lequal [::rbac::edges::roletoroleassignment2 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment3 name] roletoroleassignment3}\
+      {my lequal [::rbac::edges::roletoroleassignment3 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment3 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment3 target] D }\
+      {my lequal [::rbac::edges::roletoroleassignment3 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddSeniorRelationSuccess end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddJuniorRelationFail \
+    -test_body {[::rbac addSeniorRoleRelation X A] success}\
+    -expected_result 0
+BA_RBAC_Roles::AddJuniorRelationFail postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::role4]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role3 name] C}\
+      {my lequal [::rbac::nodes::role4 name] D}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role3 incoming] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role4 incoming] ::rbac::edges::roletoroleassignment3}\
+      {my lequal [::rbac::nodes::role1 outgoing] "::rbac::edges::roletoroleassignment1 ::rbac::edges::roletoroleassignment3"}\
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role3 outgoing] ""}\
+      {my lequal [::rbac::nodes::role4 outgoing] ""}\
+      {my lequal [lsort -dictionary [::rbac::nodes::role1 array names juniorroles]] "B D"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] "C ::rbac::nodes::role3"}\
+      {my lequal [::rbac::nodes::role3 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role4 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::nodes::role3 array get seniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role4 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::edges info children] [list ::rbac::edges::roletoroleassignment1\
+						    ::rbac::edges::roletoroleassignment2\
+						    ::rbac::edges::roletoroleassignment3]}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 name] roletoroleassignment2}\
+      {my lequal [::rbac::edges::roletoroleassignment2 source] B }\
+      {my lequal [::rbac::edges::roletoroleassignment2 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 target] C }\
+      {my lequal [::rbac::edges::roletoroleassignment2 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment3 name] roletoroleassignment3}\
+      {my lequal [::rbac::edges::roletoroleassignment3 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment3 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment3 target] D }\
+      {my lequal [::rbac::edges::roletoroleassignment3 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddJuniorRelationFail end
+
+
+::STORM::TestScenario BA_RBAC_Roles::AddJuniorRelationFail2 \
+    -test_body {[::rbac addSeniorRoleRelation A Y] success}\
+    -expected_result 0
+BA_RBAC_Roles::AddJuniorRelationFail2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::role4]}\
+      {my lequal [::rbac::nodes::role1 name] A}\
+      {my lequal [::rbac::nodes::role2 name] B}\
+      {my lequal [::rbac::nodes::role3 name] C}\
+      {my lequal [::rbac::nodes::role4 name] D}\
+      {my lequal [::rbac::nodes::role1 incoming] ""}\
+      {my lequal [::rbac::nodes::role2 incoming] ::rbac::edges::roletoroleassignment1}\
+      {my lequal [::rbac::nodes::role3 incoming] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role4 incoming] ::rbac::edges::roletoroleassignment3}\
+      {my lequal [::rbac::nodes::role1 outgoing] "::rbac::edges::roletoroleassignment1 ::rbac::edges::roletoroleassignment3"}\
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletoroleassignment2}\
+      {my lequal [::rbac::nodes::role3 outgoing] ""}\
+      {my lequal [::rbac::nodes::role4 outgoing] ""}\
+      {my lequal [lsort -dictionary [::rbac::nodes::role1 array names juniorroles]] "B D"}\
+      {my lequal [::rbac::nodes::role2 array get juniorroles] "C ::rbac::nodes::role3"}\
+      {my lequal [::rbac::nodes::role3 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role4 array get juniorroles] ""}\
+      {my lequal [::rbac::nodes::role1 array get seniorroles] ""}\
+      {my lequal [::rbac::nodes::role2 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::nodes::role3 array get seniorroles] "B ::rbac::nodes::role2"}\
+      {my lequal [::rbac::nodes::role4 array get seniorroles] "A ::rbac::nodes::role1"}\
+      {my lequal [::rbac::edges info children] [list ::rbac::edges::roletoroleassignment1\
+						    ::rbac::edges::roletoroleassignment2\
+						    ::rbac::edges::roletoroleassignment3]}\
+      {my lequal [::rbac::edges::roletoroleassignment1 name] roletoroleassignment1}\
+      {my lequal [::rbac::edges::roletoroleassignment1 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment1 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment1 target] B }\
+      {my lequal [::rbac::edges::roletoroleassignment1 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 name] roletoroleassignment2}\
+      {my lequal [::rbac::edges::roletoroleassignment2 source] B }\
+      {my lequal [::rbac::edges::roletoroleassignment2 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment2 target] C }\
+      {my lequal [::rbac::edges::roletoroleassignment2 target_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment3 name] roletoroleassignment3}\
+      {my lequal [::rbac::edges::roletoroleassignment3 source] A }\
+      {my lequal [::rbac::edges::roletoroleassignment3 source_type] ::UML2::BusinessActivity::Role}\
+      {my lequal [::rbac::edges::roletoroleassignment3 target] D }\
+      {my lequal [::rbac::edges::roletoroleassignment3 target_type] ::UML2::BusinessActivity::Role}\
+    }
+BA_RBAC_Roles order add BA_RBAC_Roles::AddJuniorRelationFail2 end

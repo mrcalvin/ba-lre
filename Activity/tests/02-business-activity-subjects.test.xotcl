@@ -1,0 +1,695 @@
+
+::STORM::TestCase BA_RBAC_Subjects \
+    -setup_script {
+       my resetAllAutonames ::xotcl::Object
+      ::UML2::BusinessActivity::RBACModel ::rbac
+    } \
+    -cleanup_script {
+      ::rbac destroy
+    }
+
+# test of basic "role" functions
+
+::STORM::TestScenario BA_RBAC_Subjects::AddSubjectSuccess \
+    -test_body {[::rbac addSubject A] success}\
+    -expected_result 1
+BA_RBAC_Subjects::AddSubjectSuccess preconditions add {my lequal [::rbac::nodes info children] ""}
+BA_RBAC_Subjects::AddSubjectSuccess postconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::subject1}
+      {my lequal [::rbac::nodes::subject1 name] A}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::AddSubjectSuccess end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::AddSubjectSuccess2 \
+    -test_body {[::rbac addSubject B] success}\
+    -expected_result 1
+BA_RBAC_Subjects::AddSubjectSuccess2 preconditions assign\
+    { {my lequal [::rbac::nodes info children] ::rbac::nodes::subject1}
+      {my lequal [::rbac::nodes::subject1 name] A}
+    }
+BA_RBAC_Subjects::AddSubjectSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::AddSubjectSuccess2 end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::AddSubjectFail \
+    -test_body {[::rbac addSubject B] success}\
+    -expected_result 0
+BA_RBAC_Subjects::AddSubjectFail postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::AddSubjectFail end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::RoleSubjectAssignSuccess\
+    -test_body {
+      ::rbac addRole R1
+      ::rbac addRole R2
+      [::rbac roleSubjectAssign R1 B] success}\
+    -expected_result 1
+BA_RBAC_Subjects::RoleSubjectAssignSuccess preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] ""}
+      {my lequal [::rbac::nodes::subject2 incoming] ""}
+      {my lequal [::rbac::nodes::subject1 array get roles] ""}
+      {my lequal [::rbac::nodes::subject2 array get roles] ""}
+      {my lequal [::rbac::edges info children] ""}
+      
+    }
+BA_RBAC_Subjects::RoleSubjectAssignSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] ""}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ""}
+      {my lequal [::rbac::nodes::subject1 array get roles] ""}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [::rbac::edges info children] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::RoleSubjectAssignSuccess end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::RoleSubjectAssignSuccess2\
+    -test_body {[::rbac roleSubjectAssign R2 A] success}\
+    -expected_result 1
+BA_RBAC_Subjects::RoleSubjectAssignSuccess2 preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] ""}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ""}
+      {my lequal [::rbac::nodes::subject1 array get roles] ""}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [::rbac::edges info children] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects::RoleSubjectAssignSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::subject1 array get roles] "R2 ::rbac::nodes::role2"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+						    ::rbac::edges::roletosubjectassignment2]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::RoleSubjectAssignSuccess2 end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::RoleSubjectAssignSuccess3\
+    -test_body {
+      ::rbac addRole R3
+      [::rbac roleSubjectAssign R3 A] success}\
+    -expected_result 1
+BA_RBAC_Subjects::RoleSubjectAssignSuccess3 preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::subject1 array get roles] "R2 ::rbac::nodes::role2"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+						    ::rbac::edges::roletosubjectassignment2]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects::RoleSubjectAssignSuccess3 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::RoleSubjectAssignSuccess3 end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::RoleSubjectAssignFail\
+    -test_body {[::rbac roleSubjectAssign X A] success}\
+    -expected_result 0
+BA_RBAC_Subjects::RoleSubjectAssignFail postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::RoleSubjectAssignFail end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::RoleSubjectAssignFail2\
+    -test_body {[::rbac roleSubjectAssign R1 X] success}\
+    -expected_result 0
+BA_RBAC_Subjects::RoleSubjectAssignFail2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::RoleSubjectAssignFail2 end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::SubjectSetActiveRoleSuccess\
+    -test_body {[::rbac setActiveRole A R2] success}\
+    -expected_result 1
+BA_RBAC_Subjects::SubjectSetActiveRoleSuccess preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] ""}
+      {my lequal [::rbac::nodes::subject2 active_role] ""}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects::SubjectSetActiveRoleSuccess postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R2}
+      {my lequal [::rbac::nodes::subject2 active_role] ""}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::SubjectSetActiveRoleSuccess end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::SubjectSetActiveRoleSuccess2\
+    -test_body {[::rbac setActiveRole A R3] success}\
+    -expected_result 1
+BA_RBAC_Subjects::SubjectSetActiveRoleSuccess2 preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R2}
+      {my lequal [::rbac::nodes::subject2 active_role] ""}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects::SubjectSetActiveRoleSuccess2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R3}
+      {my lequal [::rbac::nodes::subject2 active_role] ""}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::SubjectSetActiveRoleSuccess2 end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::SubjectSetActiveRoleSuccess3\
+    -test_body {[::rbac setActiveRole B R1] success}\
+    -expected_result 1
+BA_RBAC_Subjects::SubjectSetActiveRoleSuccess3 preconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R3}
+      {my lequal [::rbac::nodes::subject2 active_role] ""}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects::SubjectSetActiveRoleSuccess3 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R3}
+      {my lequal [::rbac::nodes::subject2 active_role] R1}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::SubjectSetActiveRoleSuccess3 end
+
+
+
+::STORM::TestScenario BA_RBAC_Subjects::SubjectSetActiveRoleFail\
+    -test_body {[::rbac setActiveRole X R1] success}\
+    -expected_result 0
+BA_RBAC_Subjects::SubjectSetActiveRoleFail postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R3}
+      {my lequal [::rbac::nodes::subject2 active_role] R1}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::SubjectSetActiveRoleFail end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::SubjectSetActiveRoleFail2\
+    -test_body {[::rbac setActiveRole A X] success}\
+    -expected_result 0
+BA_RBAC_Subjects::SubjectSetActiveRoleFail2 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R3}
+      {my lequal [::rbac::nodes::subject2 active_role] R1}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::SubjectSetActiveRoleFail2 end
+
+
+::STORM::TestScenario BA_RBAC_Subjects::SubjectSetActiveRoleFail3\
+    -test_body {[::rbac setActiveRole A R1] success}\
+    -expected_result 0
+BA_RBAC_Subjects::SubjectSetActiveRoleFail3 postconditions assign\
+    { {my lequal [lsort -dictionary [::rbac::nodes info children]] [list ::rbac::nodes::role1\
+									::rbac::nodes::role2\
+									::rbac::nodes::role3\
+									::rbac::nodes::subject1\
+									::rbac::nodes::subject2]}
+      {my lequal [::rbac::nodes::subject1 name] A}
+      {my lequal [::rbac::nodes::subject2 name] B}
+      {my lequal [::rbac::nodes::subject1 active_role] R3}
+      {my lequal [::rbac::nodes::subject2 active_role] R1}
+      {my lequal [::rbac::nodes::subject1 incoming] "::rbac::edges::roletosubjectassignment2 ::rbac::edges::roletosubjectassignment3"}
+      {my lequal [::rbac::nodes::subject2 incoming] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role1 incoming] ""}
+      {my lequal [::rbac::nodes::role2 incoming] ""}
+      {my lequal [::rbac::nodes::role3 incoming] ""}
+      {my lequal [::rbac::nodes::role1 outgoing] ::rbac::edges::roletosubjectassignment1}
+      {my lequal [::rbac::nodes::role2 outgoing] ::rbac::edges::roletosubjectassignment2}
+      {my lequal [::rbac::nodes::role3 outgoing] ::rbac::edges::roletosubjectassignment3}
+      {my lequal [lsort -dictionary [::rbac::nodes::subject1 array names roles]] "R2 R3"}
+      {my lequal [::rbac::nodes::subject2 array get roles] "R1 ::rbac::nodes::role1"}
+      {my lequal [lsort -dictionary [::rbac::edges info children]] [list ::rbac::edges::roletosubjectassignment1\
+									::rbac::edges::roletosubjectassignment2\
+									::rbac::edges::roletosubjectassignment3]}
+      {my lequal [::rbac::edges::roletosubjectassignment1 name] roletosubjectassignment1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source] R1}
+      {my lequal [::rbac::edges::roletosubjectassignment1 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target] B}
+      {my lequal [::rbac::edges::roletosubjectassignment1 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment2 name] roletosubjectassignment2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source] R2}
+      {my lequal [::rbac::edges::roletosubjectassignment2 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment2 target_type] ::UML2::BusinessActivity::Subject}
+      {my lequal [::rbac::edges::roletosubjectassignment3 name] roletosubjectassignment3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source] R3}
+      {my lequal [::rbac::edges::roletosubjectassignment3 source_type] ::UML2::BusinessActivity::Role}
+      {my lequal [::rbac::edges::roletosubjectassignment3 target] A}
+      {my lequal [::rbac::edges::roletosubjectassignment3  target_type] ::UML2::BusinessActivity::Subject}
+    }
+BA_RBAC_Subjects order add BA_RBAC_Subjects::SubjectSetActiveRoleFail3 end
