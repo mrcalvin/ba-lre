@@ -2,6 +2,18 @@ set auto_path ".. ../.. $auto_path"
 
 package require STORM 0.5
 
+#package req MSXOLIB
+
+#namespace eval ::UML2 {
+#Object resultobjects
+#Object resultobjects::result1
+#}
+
+
+
+#puts stderr [::msxolib::FunctionResult [::xotcl::Object autoname UML2::resultobjects::result] -success 1 -comment "graphs."]
+#exit
+
 # eliminate dublicate list elements while retaining element order
 proc luniqueorder {list} {
   set nl ""

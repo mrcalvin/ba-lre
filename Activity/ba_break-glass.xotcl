@@ -14,7 +14,7 @@ namespace eval ::UML2 {
   # Class BusinessActivity::BreakGlassExtension
   ##############################################
 
-  Class BusinessActivity::BreakGlassExtension
+  Class create BusinessActivity::BreakGlassExtension
 
   BusinessActivity::BreakGlassExtension instproc init args {
     [self] slots {
@@ -25,10 +25,10 @@ namespace eval ::UML2 {
         } elseif {($value eq 1)} {
            $domain set $var $value
 	   my on=valuechangedcmd $domain $var $value
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
 		      -comment "Successfully set break-glass state to << $value >>."]
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "Allowed break-glass states are: '1' (true) or '0' (false).\n\
                 Use of << $value >> is not permitted. Once a process instance is broken\
                 (i.e. set to '1' = true) it cannot be unbroken (reset to '0' = false)."]
@@ -41,26 +41,26 @@ namespace eval ::UML2 {
 	  }
 	}
       }
-      
+
       ::msxolib::SingleValued review_process_type -proc value=set {domain var value} {
 	my instvar default
 	if {![$domain exists $var]} {
 	  next
         } elseif {![::xotcl::Object isobject $value]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "The review process must be a ::UML2::Activity. << $value >> is\
                                 not of type ::UML2::Activity"]
-	  
+
 	} elseif {[$domain info class] eq $value} {
-	   return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	   return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "The type of review process must be different from the process type to be reviewed.\
                                 Therefore << $value >> cannot be the review process for << $domain >>."]
 	} elseif {[$value istype ::UML2::Activity]} {
 	  $domain set $var $value
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
 		      -comment "Successfully registered << $value >> as review process."]
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "The review process must be a ::UML2::Activity. << $value >> is\
                                 not of type ::UML2::Activity"]
 	}
@@ -71,15 +71,15 @@ namespace eval ::UML2 {
 	if {![$domain exists $var]} {
 	  next
         } elseif {![$value istype [$domain review_process_type]]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "The instance of the review process must be of type << [$domain review_process_type] >>.\
                                 Therefore << $value >> cannot be the review process instance for << $domain >>."]
 	} else {
 	  $domain set $var $value
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
 		      -comment "Successfully registered << $value >> as review process instance."]
 	}
-      } 
+      }
 
       ::msxolib::SingleValued review_process_activated -default 0 -proc value=set {domain var value} {
 	my instvar default
@@ -87,47 +87,47 @@ namespace eval ::UML2 {
 	  next
         } elseif {$value eq 1} {
 	  $domain set $var $value
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
 		      -comment "Review process activated."]
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "A review process can either be activated or not: '1' (true) or '0' (false).\n\
                                Use of << $value >> is not permitted. Once a review process is activated\
                                it cannot be deactivated."]
 	}
       }
     }
-      
+
     [self] instproc breakglassTaskAllocation {baction {subject ""}} {
       if {![[[my info class] businessActionExists $baction] success]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $baction >>\
                             does not exist in BusinessActivity << [[my info class] name] >>."]
       }
       if {$subject != ""} {
 	if {![[[my info class] associated_rbac_model] existSubject $subject]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, Subject << $subject >>\
                               does not exist in associated RBAC model << [[my info class] associated_rbac_model] >>."]
 	}
       }
       if {[my review_process_type] eq ""} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, no review process assigned."]
       }
       set s [[[my info class] associated_rbac_model] getFQON ::UML2::BusinessActivity::Subject $subject]
       set batype [namespace tail [[my info class] set businessaction($baction)]]
       set bainstance [my set [set batype]($baction)]
       set allocation [$bainstance breakglassAllocation $s]
-      if {[$allocation success]} { 
-	my set broken 1 
+      if {[$allocation success]} {
+	my set broken 1
 	# instantiate review process
 	if {![my review_process_activated]} {
 	  my review_process_instance [[my review_process_type] [self]_review_process]
 	  my review_process_activated 1
 	}
       }
-      return $allocation 
+      return $allocation
     }
 
     next
@@ -141,7 +141,7 @@ namespace eval ::UML2 {
   # Class BusinessActivity::BrokenProcessInstance
   ################################################
 
-  Class BusinessActivity::BrokenProcessInstance
+  Class create BusinessActivity::BrokenProcessInstance
 
   BusinessActivity::BrokenProcessInstance instproc isRoleBoundTaskBroken {baction} {
     foreach rbt [[$baction info class] getAllRoleBindingConstraints] {
@@ -159,17 +159,17 @@ namespace eval ::UML2 {
     return 0
   }
 
-  # redefine the allocateBusinessAction method for broken process instances 
+  # redefine the allocateBusinessAction method for broken process instances
   # (i.e. for broken instances of ::UML2::BusinessActivity)
   BusinessActivity::BrokenProcessInstance instproc allocateBusinessAction {baction {subject ""}} {
     if {![[[my info class] businessActionExists $baction] success]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $baction >>\
                             does not exist in BusinessActivity << [[my info class] name] >>."]
     }
     if {$subject != ""} {
       if {![[[my info class] associated_rbac_model] existSubject $subject]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, Subject << $subject >>\
                               does not exist in associated RBAC model << [[my info class] associated_rbac_model] >>."]
       }
@@ -178,8 +178,8 @@ namespace eval ::UML2 {
     set batype [namespace tail [[my info class] set businessaction($baction)]]
     set bainstance [my set [set batype]($baction)]
     set allocation [$bainstance allocate $s]
-    if {![$allocation success]} { 
-      return $allocation 
+    if {![$allocation success]} {
+      return $allocation
     } else {
       # only allocate role-bound tasks if non of the role-bound tasks is broken
       if {![my isRoleBoundTaskBroken $bainstance]} {
@@ -209,16 +209,16 @@ namespace eval ::UML2 {
   #####################################################################
   # Class BusinessActivity::BrokenProcessInstance::ChangedTaskBehavior
   ####################################################################
-  
-  # this class defines changed behavior for all (broken and unbroken) 
+
+  # this class defines changed behavior for all (broken and unbroken)
   # task instances in a broken process instance
-  Class BusinessActivity::BrokenProcessInstance::ChangedTaskBehavior
-  
+  Class create BusinessActivity::BrokenProcessInstance::ChangedTaskBehavior
+
   BusinessActivity::BrokenProcessInstance::ChangedTaskBehavior instproc isDMETaskBroken {} {
     set mutex [[my info class] array names dme]
     if {$mutex eq ""} {
       return 0
-    } else {      
+    } else {
       foreach ba $mutex {
 	set batype [namespace tail [[my info class] set dme($ba)]]
 	set bainstance [[my owning_graph] set [set batype]($ba)]
@@ -228,9 +228,9 @@ namespace eval ::UML2 {
     return 0
   }
 
-  # redefine the isAllocatabelToSubject method:  the DME, SBind, and RBind checks are disabled 
-  # for task instances that have a "constraint relation" to a broken task instance but are 
-  # themselves unbroken. Broken task instances cannot be re-allocated via the "allocate" method  
+  # redefine the isAllocatabelToSubject method:  the DME, SBind, and RBind checks are disabled
+  # for task instances that have a "constraint relation" to a broken task instance but are
+  # themselves unbroken. Broken task instances cannot be re-allocated via the "allocate" method
   # (see also Class BusinessAction::BrokenTaskInstance)
   BusinessActivity::BrokenProcessInstance::ChangedTaskBehavior instproc isAllocatableToSubject {subject} {
     if {![$subject istype ::UML2::BusinessActivity::Subject]} { return 0 }
@@ -247,13 +247,13 @@ namespace eval ::UML2 {
     }
     return 1
   }
-  
+
   ############################################
   # Class BusinessAction::BreakGlassExtension
   ############################################
 
-  Class BusinessAction::BreakGlassExtension
-  
+  Class create BusinessAction::BreakGlassExtension
+
   BusinessAction::BreakGlassExtension instproc init args {
     [self] slots {
       ::msxolib::SingleValued broken -default 0 -proc value=set {domain var value} {
@@ -262,11 +262,11 @@ namespace eval ::UML2 {
 	  next
         } elseif {$value eq 1} {
 	  $domain set $var $value
-	  my on=valuechangedcmd $domain $var $value	
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
+	  my on=valuechangedcmd $domain $var $value
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success  1\
 		      -comment "Task broken."]
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success  0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success  0\
 		      -comment "Allowed break-glass states are: '1' (true) or '0' (false).\n\
                                 Use of << $value >> is not permitted. Once a task instance is broken\
                                 (i.e. set to '1' = true) it cannot be unbroken (reset to '0' = false)."]
@@ -291,7 +291,7 @@ namespace eval ::UML2 {
       }
       return [lsort -dictionary -unique $subjects]
     }
-  
+
 
     [self] instproc breakglassAllocation {{subject ""}} {
       if {$subject eq ""} {
@@ -306,18 +306,18 @@ namespace eval ::UML2 {
 	  my executing_role [$s active_role]
 	  my set broken 1
 	  if {$reallocation} {
-	    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		      -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                               successfully re-allocated BusinessAction << [my name] >>\
                               to subject << [my executing_subject] >> and role << [my executing_role] >>."]
 	  } else {
-	    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 			-comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                               successfully allocated BusinessAction << [my name] >>\
                               to subject << [my executing_subject] >> and role << [my executing_role] >>."]
 	  }
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc] FAILED,\
                               BusinessAction << [my name] >> cannot be allocated to any subject."]
 	}
@@ -325,7 +325,7 @@ namespace eval ::UML2 {
 	if {[my breakglassAllocationAllowed $subject]} {
 	  if {[my executing_subject] eq [$subject name]} {
 	    my set broken 1
-	    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 			-comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                                 BusinessAction << [my name] >> already allocated to << [my executing_subject] >>."]
 	  }
@@ -334,18 +334,18 @@ namespace eval ::UML2 {
 	  my executing_role [$subject active_role]
 	  my set broken 1
 	  if {$reallocation} {
-	    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 			-comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                               successfully re-allocated BusinessAction << [my name] >>\
                               to subject << [my executing_subject] >> and role << [my executing_role] >>."]
 	  } else {
-	    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 			-comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                               successfully allocated BusinessAction << [my name] >>\
                               to subject << [my executing_subject] >> and role << [my executing_role] >>."]
 	  }
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc] FAILED,\
                               BusinessAction << [my name] >> cannot be allocated to << [$subject name] >>."]
 	}
@@ -363,23 +363,23 @@ namespace eval ::UML2 {
   # Class BusinessAction::BrokenTaskInstance
   ############################################
 
-  Class BusinessAction::BrokenTaskInstance
+  Class create BusinessAction::BrokenTaskInstance
 
   # disable the allocate method for broken task instances
   BusinessAction::BrokenTaskInstance instproc  allocate {{subject ""}} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc] FAILED,\
                               BusinessAction << [my name] >> was broken (i.e. it was allocated to subject\
                               << [my executing_subject] >> via a break-glass override), therefore the\
                               [self proc] method is disabled for << [my name] >> ."]
   }
 
-  
+
   #######################################################
   # Class BusinessActivity::Subject::BreakGlassExtension
   #######################################################
 
-  Class BusinessActivity::Subject::BreakGlassExtension
+  Class create BusinessActivity::Subject::BreakGlassExtension
 
   BusinessActivity::Subject::BreakGlassExtension instproc init args {
     array set breakabletasks ""
@@ -390,13 +390,13 @@ namespace eval ::UML2 {
   ::UML2::BusinessActivity::Subject instmixin add ::UML2::BusinessActivity::Subject::BreakGlassExtension
 
 
-  
+
   ##################################################
   # Extensions for Class BusinessActivity::Subject
   ##################################################
 
   # with respect to the subject's directly and transitively assigned break-glass tasks
-  # and with respect ot the subject's active_role: is the subject (currently) able to 
+  # and with respect ot the subject's active_role: is the subject (currently) able to
   # perform a break-glass override for the task referred to via the baction parameter?
   BusinessActivity::Subject instproc canDoBreakGlassOverride {baction} {
     if {[my directlyOwnsBreakGlassTask $baction]} { return 1 }
@@ -427,7 +427,7 @@ namespace eval ::UML2 {
   BusinessActivity::Subject instproc getAllBreakGlassTasks {} {
     set tasks [my getDirectBreakGlassTasks]
     set tasks [concat $tasks [my getTransitiveBreakGlassTasks]]
-    return [lsort -dictionary -unique $tasks]	     
+    return [lsort -dictionary -unique $tasks]
   }
 
   BusinessActivity::Subject instproc directlyOwnsBreakGlassTask {baction} {
@@ -439,7 +439,7 @@ namespace eval ::UML2 {
   # Class BusinessActivity::Role::BreakGlassExtension
   ####################################################
 
-  Class BusinessActivity::Role::BreakGlassExtension
+  Class create BusinessActivity::Role::BreakGlassExtension
 
   BusinessActivity::Role::BreakGlassExtension instproc init args {
     array set breakabletasks ""
@@ -465,7 +465,7 @@ namespace eval ::UML2 {
     }
     return 0
   }
-  
+
   BusinessActivity::Role instproc ownsBreakGlassTask {baction} {
     if {[my directlyOwnsBreakGlassTask $baction]} { return 1 }
     if {[my transitivelyOwnsBreakGlassTask $baction]} { return 1 }
@@ -479,7 +479,7 @@ namespace eval ::UML2 {
     }
     return [lsort -dictionary $directtasks]
   }
-  
+
   BusinessActivity::Role instproc getTransitiveBreakGlassTasks {} {
     set tasks ""
     foreach jr [my array names juniorroles] {
@@ -491,38 +491,38 @@ namespace eval ::UML2 {
   BusinessActivity::Role instproc getAllBreakGlassTasks {} {
     set tasks [my getDirectBreakGlassTasks]
     set tasks [concat $tasks [my getTransitiveBreakGlassTasks]]
-    return [lsort -dictionary -unique $tasks]	     
+    return [lsort -dictionary -unique $tasks]
   }
-  
+
   ####################################################
   # Extensions for Class BusinessActivity::RBACModel
   ####################################################
 
   BusinessActivity::RBACModel instproc breakglassTaskRoleAssign {process task role} {
     if {![::xotcl::Object isobject $process]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >>\
                           does not exist."]
     }
     if {![$process istype ::UML2::BusinessActivity]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, << $process >> is not of\
                           type BusinessActivity."]
     }
     if {![$process existNode ::UML2::BusinessAction $task]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >> does\
                           not contain BusinessAction << $task >>."]
     }
     if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
     }
     set r [my getFQON ::UML2::BusinessActivity::Role $role]
     set t [$process getFQON ::UML2::BusinessActivity::BusinessAction $task]
     foreach ba [$r getAllAssignedTasks] {
       if {$ba eq $t} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $task >>\
                             is already (directly or transitively) assigned to role << $role >> via the\
                             task-to-role assignment relation."]
@@ -531,7 +531,7 @@ namespace eval ::UML2 {
     foreach sr [$r getAllSeniorRoles] {
       foreach ba [$sr getDirectlyAssignedTasks] {
 	if {$ba eq $t} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $task >>\
                               is already assigned to role << [$sr name] >>, a senior-role of << $role >>. By defining\
                               a break-glass relation between << $task >> and << $role >> the corresponding\
@@ -544,7 +544,7 @@ namespace eval ::UML2 {
       foreach sr [$s getAllAssignedRoles] {
 	foreach st [$sr getAllAssignedTasks] {
 	  if {$st eq $t} {
-	    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 			-comment "[my info class] [self] [self proc] FAILED, Role << $role >> is assigned\
                                 to Subject << [$s name] >>. This subject also (directly or transitively) owns\
                                 Role << [$sr name] >> which again owns BusinessAction << [$st name] >>. Thus,\
@@ -556,7 +556,7 @@ namespace eval ::UML2 {
       }
     }
     $r set breakabletasks($task) $t
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		-comment "[my info class] [self] [self proc], successfully assigned BusinessAction\
                         << $task >> to Role << $role >> as a break-glass task."]
   }
@@ -565,22 +565,22 @@ namespace eval ::UML2 {
 
   BusinessActivity::RBACModel instproc breakglassTaskSubjectAssign {process task subject} {
     if {![::xotcl::Object isobject $process]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >>\
                           does not exist."]
     }
     if {![$process istype ::UML2::BusinessActivity]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, << $process >> is not of\
                           type BusinessActivity."]
     }
     if {![$process existNode ::UML2::BusinessAction $task]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >> does\
                           not contain BusinessAction << $task >>."]
     }
     if {![my existNode ::UML2::BusinessActivity::Subject $subject]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, Subject << $subject >> does not exist."]
     }
     set s [my getFQON ::UML2::BusinessActivity::Subject $subject]
@@ -588,7 +588,7 @@ namespace eval ::UML2 {
     foreach r [$s getAllAssignedRoles] {
       foreach st [$r getAllAssignedTasks] {
 	if {$st eq $t} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, Subject << $subject >> (directly or\
                                 transitively) owns Role << [$r name] >> which again owns BusinessAction\
                                 << [$st name] >>. Thus, by defining a break-glass relation between << $task >>\
@@ -599,11 +599,11 @@ namespace eval ::UML2 {
       }
     }
     $s set breakabletasks($task) $t
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		-comment "[my info class] [self] [self proc], successfully assigned BusinessAction\
                         << $task >> to subject << $subject >> as a break-glass task."]
   }
-  
+
 
 }
 # ::UML2 namespace ends here

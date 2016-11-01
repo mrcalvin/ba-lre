@@ -17,7 +17,7 @@ namespace eval ::STORM {
   #################
   # Class TestSuite
   #################
-  Class TestSuite -slots {
+  Class create TestSuite -slots {
     Attribute setup_script  
     Attribute cleanup_script
     Attribute detailed_report -default 0 
@@ -175,7 +175,7 @@ namespace eval ::STORM {
   ################
   # Class TestCase
   ################
-  Class TestCase -slots {
+  Class create TestCase -slots {
     Attribute setup_script
     Attribute preconditions -default "" -multivalued true
     Attribute postconditions -default "" -multivalued true
@@ -288,7 +288,7 @@ namespace eval ::STORM {
   ####################
   # Class TestScenario
   ####################
-  Class TestScenario -slots {
+  Class create TestScenario -slots {
     Attribute test_body
     Attribute expected_result
     Attribute preconditions -default "" -multivalued true
@@ -389,7 +389,7 @@ namespace eval ::STORM {
   ##############
   # Class Report
   ##############
-  Class Report -slots {
+  Class create Report -slots {
     Attribute detailed -default 0
   }
 
@@ -424,7 +424,7 @@ namespace eval ::STORM {
   ##################
   # Class TestResult
   ##################
-  Class TestResult -slots {
+  Class create TestResult -slots {
     Attribute success -default {}
     Attribute object_name -default {}
     Attribute object_reference -default {}

@@ -11,10 +11,10 @@ package require UML2::Graph 0.1.1
 namespace eval ::UML2 {
 
 ################################
-# Class Activity 
+# Class Activity
 ################################
 
-Class Activity -superclass {::xotcl::Class ::UML2::Graph}
+Class create Activity -superclass {::xotcl::Class ::UML2::Graph}
 
 Activity instproc init args {
   foreach ntype {Action InitialNode ActivityFinalNode ForkNode\
@@ -25,14 +25,14 @@ Activity instproc init args {
     my valid_edge_types add ::UML2::$etype
   }
   my superclass add ::UML2::Graph
-  
+
   [self] instproc addEdge {edgeType fromType from toType to {name ""}} {
     set result [next]
     if {[$result success]} {
       # all activity edges are directed
       [$result object_reference] source_navigable 0
     }
-    return $result  
+    return $result
   }
 
   [self] instproc init args {
@@ -66,42 +66,42 @@ Activity instproc addEdge {edgeType fromType from toType to {name ""}} {
     # all activity edges are directed
     [$result object_reference] source_navigable 0
   }
-  return $result  
+  return $result
 }
 
 # check the construction rules of UML activity models (overwrites Graph instproc checkGraphConstructionRules)
 Activity instproc checkGraphConstructionRules {edgeType fromType from toType to} {
-  if {[$fromType info heritage ::UML2::ControlNode] eq "::UML2::ControlNode" || 
+  if {[$fromType info heritage ::UML2::ControlNode] eq "::UML2::ControlNode" ||
       [$toType info heritage ::UML2::ControlNode] eq "::UML2::ControlNode"} {
     set fromnode [my getFQON $fromType $from]
     set tonode [my getFQON $toType $to]
-    # UML Superstructure Spec.: The edges coming into and out of a fork node 
+    # UML Superstructure Spec.: The edges coming into and out of a fork node
     # must be either all object flows or all control flows.
     #
-    # UML Superstructure Spec.:  The edges coming into and out of a decision node other 
+    # UML Superstructure Spec.:  The edges coming into and out of a decision node other
     # than the decision input flow (if any), must be either all object flows or all control flows.
     #
-    # The decisionInput of a decision node is of type Behavior, it can provide input to guard 
-    # specifications on edges outgoing from the decision node; i.e. the decisionInput is neither 
+    # The decisionInput of a decision node is of type Behavior, it can provide input to guard
+    # specifications on edges outgoing from the decision node; i.e. the decisionInput is neither
     # a ControlFlow nor an ObjectFlow.
     if {($fromType eq "::UML2::ForkNode") || ($fromType eq "::UML2::DecisionNode")} {
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$fromnode hasIncomingEdgeType "::UML2::ObjectFlow"]} {
-	   return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	   return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                has an incoming object flow. Therefore, all outgoing edges must also be object flows."]
 	}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$fromnode hasIncomingEdgeType "::UML2::ControlFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                has an incoming control flow. Therefore, all outgoing edges must also be control flows."]
 	}
       }
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$fromnode hasOutgoingEdgeType "::UML2::ObjectFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                already has an outgoing object flow. Therefore, all other outgoing edges must\
                                also be object flows."]
@@ -109,7 +109,7 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$fromnode hasOutgoingEdgeType "::UML2::ControlFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                already has an outgoing control flow. Therefore, all other outgoing edges must\
                                also be control flows."]
@@ -118,38 +118,38 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
     }
     if {($toType eq "::UML2::ForkNode") || ($toType eq "::UML2::DecisionNode")} {
       if {[$tonode incoming] ne ""} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                already has an incoming edge."]
       }
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$tonode hasOutgoingEdgeType "::UML2::ObjectFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has outgoing object flows. Therefore, the incoming edge must also be an object flow."]
 	}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$tonode hasOutgoingEdgeType "::UML2::ControlFlow"]} {
-	   return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	   return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has outgoing control flows. Therefore, the incoming edge must also be a control flow."]
 	}
       }
     }
-    # UML Superstructure Spec.: If a join node has an incoming object flow, it must 
+    # UML Superstructure Spec.: If a join node has an incoming object flow, it must
     # have an outgoing object flow, otherwise, it must have an outgoing control flow
     #
     # (i.e. the same join node may have incoming control flows AND incoming object flows)
     if {$fromType eq "::UML2::JoinNode"} {
       if {[$fromnode outgoing] ne ""} {
- 	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+ 	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
  		    -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                already has an outgoing edge."]
       }
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$fromnode hasIncomingEdgeType "::UML2::ObjectFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                has at least one incoming object flow. Therefore, the outgoing edge\
                                must also be an object flow."]
@@ -157,7 +157,7 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {![$fromnode hasIncomingEdgeType "::UML2::ObjectFlow"]} {
-	   return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	   return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                has no incoming object flow. Therefore, the outgoing edge must be a control flow."]
 	}
@@ -166,30 +166,30 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
     if {$toType eq "::UML2::JoinNode"} {
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$tonode hasOutgoingEdgeType "::UML2::ControlFlow"]} {
-	   return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	   return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has an outgoing control flow. Therefore, all incoming edges must also be control flows."]
 	}
       }
     }
-    # UML Superstructure Spec.: The edges coming into and out of a merge node 
+    # UML Superstructure Spec.: The edges coming into and out of a merge node
     # must be either all object flows or all control flows.
     if {$fromType eq "::UML2::MergeNode"} {
       if {[$fromnode outgoing] ne ""} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                already has an outgoing edge."]
       }
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$fromnode hasIncomingEdgeType "::UML2::ObjectFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                has incoming object flows. Therefore, the outgoing edge must also be an object flow."]
 	}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$fromnode hasIncomingEdgeType "::UML2::ControlFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $fromType << $from >>\
                                has incoming control flows. Therefore, the outgoing edge must also be a control flow."]
 	}
@@ -198,21 +198,21 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
     if {$toType eq "::UML2::MergeNode"} {
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$tonode hasOutgoingEdgeType "::UML2::ObjectFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has an outgoing object flow. Therefore, the incoming edges must also be object flows."]
 	}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$tonode hasOutgoingEdgeType "::UML2::ControlFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has an outgoing control flow. Therefore, the incoming edges must also be control flows."]
 	}
       }
       if {$edgeType eq "::UML2::ObjectFlow"} {
 	if {[$tonode hasIncomingEdgeType "::UML2::ControlFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has an incoming control flow. Therefore, all other incoming edges must\
                                also be control flows."]
@@ -220,7 +220,7 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
       }
       if {$edgeType eq "::UML2::ControlFlow"} {
 	if {[$tonode hasIncomingEdgeType "::UML2::ObjectFlow"]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, $toType << $to >>\
                                has an incoming object flow. Therefore, all other incoming edges must\
                                also be object flows."]
@@ -228,7 +228,7 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
       }
     }
   }
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc] success, the edge from $fromType $from to\
                        $toType $to fulfills all [my info class] graph construction rules."]
 }
@@ -238,7 +238,7 @@ Activity instproc checkGraphConstructionRules {edgeType fromType from toType to}
 # Activity nodes
 ################################
 
-Class ActivityNode -superclass ::UML2::Graph::Node
+Class create ActivityNode -superclass ::UML2::Graph::Node
 
 ActivityNode instproc init args {
   if {[[self] isclass]} {
@@ -250,7 +250,7 @@ ActivityNode instproc init args {
     }
   }
   next
-} 
+}
 
 ActivityNode instproc hasIncomingEdgeType {edgeType} {
   foreach e [my incoming] {
@@ -266,50 +266,50 @@ ActivityNode instproc hasOutgoingEdgeType {edgeType} {
   return 0
 }
 
-Class Action -superclass {::UML2::ActivityNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::MultiOut}\
+Class create Action -superclass {::UML2::ActivityNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::MultiOut}\
     -slots {
       ::msxolib::OrderedSet input
       ::msxolib::OrderedSet output
     }
 
-Class ControlNode -superclass ::UML2::ActivityNode
+Class create ControlNode -superclass ::UML2::ActivityNode
 
-Class InitialNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiOut}
+Class create InitialNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiOut}
 
-Class ActivityFinalNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn}
+Class create ActivityFinalNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn}
 
-Class FlowFinalNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn}
+Class create FlowFinalNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn}
 
-Class ForkNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::SingleIn ::UML2::Graph::Node::MultiOut}
+Class create ForkNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::SingleIn ::UML2::Graph::Node::MultiOut}
 
-Class JoinNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::SingleOut}
+Class create JoinNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::SingleOut}
 
-Class DecisionNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::SingleIn ::UML2::Graph::Node::MultiOut}
+Class create DecisionNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::SingleIn ::UML2::Graph::Node::MultiOut}
 
-Class MergeNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::SingleOut}
+Class create MergeNode -superclass {::UML2::ControlNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::SingleOut}
 
-Class ObjectNode -superclass {::UML2::ActivityNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::MultiOut}\
+Class create ObjectNode -superclass {::UML2::ActivityNode ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::MultiOut}\
     -slots {
       ::msxolib::SingleValued upper_bound
       ::msxolib::SingleValued lower_bound -default 0
     }
 
-Class Pin -superclass ::UML2::ObjectNode
+Class create Pin -superclass ::UML2::ObjectNode
 
-Class InputPin -superclass ::UML2::Pin
+Class create InputPin -superclass ::UML2::Pin
 
-Class OutputPin -superclass ::UML2::Pin
+Class create OutputPin -superclass ::UML2::Pin
 
 
 ################################
 # Activity edges
 ################################
 
-Class ActivityEdge -superclass ::UML2::Graph::Edge
+Class create ActivityEdge -superclass ::UML2::Graph::Edge
 
-Class ControlFlow -superclass ::UML2::ActivityEdge
+Class create ControlFlow -superclass ::UML2::ActivityEdge
 
-Class ObjectFlow -superclass ::UML2::ActivityEdge -slots {
+Class create ObjectFlow -superclass ::UML2::ActivityEdge -slots {
   ::msxolib::SingleValued input_pin
   ::msxolib::SingleValued output_pin
 }
@@ -318,11 +318,11 @@ Class ObjectFlow -superclass ::UML2::ActivityEdge -slots {
 # Class Activity::Token
 ################################
 
-Class Activity::Token
+Class create Activity::Token
 
-Class Activity::ControlToken -superclass Activity::Token
+Class create Activity::ControlToken -superclass Activity::Token
 
-Class Activity::ObjectToken -superclass Activity::Token
+Class create Activity::ObjectToken -superclass Activity::Token
 
 
 #################################
@@ -330,7 +330,7 @@ Class Activity::ObjectToken -superclass Activity::Token
 #################################
 
 # a helper class to disable certain methods in Activity instances
-Class Activity::ProcessInstance
+Class create Activity::ProcessInstance
 
 Activity::ProcessInstance instproc addNode {type {name ""}} {
   # do nothing -- disable addNode method for Activity instances
