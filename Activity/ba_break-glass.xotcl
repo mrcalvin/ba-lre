@@ -123,7 +123,7 @@ namespace eval ::UML2 {
 	my set broken 1
 	# instantiate review process
 	if {![my review_process_activated]} {
-	  my review_process_instance [[my review_process_type] [self]_review_process]
+	  my review_process_instance [[my review_process_type] create [self]_review_process]
 	  my review_process_activated 1
 	}
       }

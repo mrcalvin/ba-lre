@@ -4,8 +4,8 @@
        my resetAllAutonames ::xotcl::Object
        package require -exact UML2::BusinessActivity::BreakGlass 0.1.1
 
-      ::UML2::BusinessActivity ::process
-      ::UML2::BusinessActivity ::reviewprocess
+      ::UML2::BusinessActivity create ::process
+      ::UML2::BusinessActivity create ::reviewprocess
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction T1
       ::process addNode ::UML2::BusinessAction T2
@@ -108,7 +108,7 @@
     }
 
 ::STORM::TestScenario BA_BG_BBR_Allocate::InstantiateSuccess \
-    -test_body {::process ::myProcessInstance}\
+    -test_body {::process create ::myProcessInstance}\
     -expected_result ::myProcessInstance
 BA_BG_BBR_Allocate::InstantiateSuccess preconditions assign\
     { {my lequal [::UML2::BusinessActivity info instmixin] ::UML2::BusinessActivity::BreakGlassExtension}
@@ -7344,7 +7344,7 @@ BA_BG_BBR_Allocate order add BA_BG_BBR_Allocate::UnbreakTaskFail end
       ::rbacmodel setActiveRole Sophie R3
       ::rbacmodel setActiveRole Joanne R4
 
-      ::process ::myProcessInstance
+      ::process create ::myProcessInstance
       ::myProcessInstance review_process_type ::reviewprocess
     } \
     -cleanup_script {

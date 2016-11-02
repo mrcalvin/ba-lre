@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_Allocate \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction A
       ::process addNode ::UML2::BusinessAction B
@@ -43,7 +43,7 @@
       ::process setDMEConstraint B C
       ::process setDMEConstraint C D
       
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addSubject Catherine
       ::rbacmodel addSubject Monica
@@ -69,7 +69,7 @@
       ::rbacmodel setActiveRole Monica R1
       ::rbacmodel setActiveRole Sophie R3
       ::rbacmodel setActiveRole Catherine R3
-      ::process ::myProcessInstance -initiating_subject Mark
+      ::process create ::myProcessInstance -initiating_subject Mark
     } \
     -cleanup_script {
       ::process destroy

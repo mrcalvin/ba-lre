@@ -3,8 +3,8 @@
        my resetAllAutonames ::xotcl::Object
        package require -exact UML2::BusinessActivity::BreakGlass 0.1.1
 
-      ::UML2::BusinessActivity ::process
-      ::UML2::BusinessActivity ::reviewprocess
+      ::UML2::BusinessActivity create ::process
+      ::UML2::BusinessActivity create ::reviewprocess
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction T1
       ::process addNode ::UML2::BusinessAction T2
@@ -61,7 +61,7 @@
       ::process setRoleBinding T7 T8
       ::process setRoleBinding T8 T9
 
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addRole R1
       ::rbacmodel addRole R2
@@ -102,7 +102,7 @@
       ::rbacmodel setActiveRole Sophie R3
       ::rbacmodel setActiveRole Joanne R4
 
-      ::process ::myProcessInstance
+      ::process create ::myProcessInstance
       ::myProcessInstance review_process_type ::reviewprocess
     } \
     -cleanup_script {
@@ -1973,8 +1973,8 @@ BA_BG_BBS_Allocate order add BA_BG_BBS_Allocate::BGAllocateSuccess3 end
        my resetAllAutonames ::xotcl::Object
        package require -exact UML2::BusinessActivity::BreakGlass 0.1.1
 
-      ::UML2::BusinessActivity ::process
-      ::UML2::BusinessActivity ::reviewprocess
+      ::UML2::BusinessActivity create ::process
+      ::UML2::BusinessActivity create ::reviewprocess
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction T1
       ::process addNode ::UML2::BusinessAction T2
@@ -2031,7 +2031,7 @@ BA_BG_BBS_Allocate order add BA_BG_BBS_Allocate::BGAllocateSuccess3 end
       ::process setRoleBinding T7 T8
       ::process setRoleBinding T8 T9
 
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addRole R1
       ::rbacmodel addRole R2
@@ -2072,7 +2072,7 @@ BA_BG_BBS_Allocate order add BA_BG_BBS_Allocate::BGAllocateSuccess3 end
       ::rbacmodel setActiveRole Sophie R3
       ::rbacmodel setActiveRole Joanne R4
 
-      ::process ::myProcessInstance
+      ::process create ::myProcessInstance
       ::myProcessInstance review_process_type ::reviewprocess
     } \
     -cleanup_script {
