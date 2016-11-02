@@ -14,27 +14,27 @@ namespace eval ::UML2 {
 # Class BusinessActivity
 ################################
 
-Class BusinessActivity -superclass ::UML2::Activity -slots {
+Class create BusinessActivity -superclass ::UML2::Activity -slots {
   ::msxolib::SingleValued associated_rbac_model
 }
 
 BusinessActivity instproc init args {
   my valid_node_types add ::UML2::BusinessAction
-  
+
   [self] slots {
     ::msxolib::SingleValued initiating_subject
     ::msxolib::SingleValued initiating_role
   }
-  
+
   [self] instproc allocateBusinessAction {baction {subject ""}} {
     if {![[[my info class] businessActionExists $baction] success]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $baction >>\
                             does not exist in BusinessActivity << [[my info class] name] >>."]
     }
     if {$subject != ""} {
       if {![[[my info class] associated_rbac_model] existSubject $subject]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, Subject << $subject >>\
                               does not exist in associated RBAC model << [[my info class] associated_rbac_model] >>."]
       }
@@ -43,8 +43,8 @@ BusinessActivity instproc init args {
     set batype [namespace tail [[my info class] set businessaction($baction)]]
     set bainstance [my set [set batype]($baction)]
     set allocation [$bainstance allocate $s]
-    if {![$allocation success]} { 
-      return $allocation 
+    if {![$allocation success]} {
+      return $allocation
     } else {
       foreach rbt [[$bainstance info class] getAllRoleBindingConstraints] {
 	set rbti [my set [namespace tail $rbt]([$rbt name])]
@@ -74,33 +74,33 @@ BusinessActivity instproc setSMEConstraint {baction1 baction2} {
     if {![$check success]} { return $check }
   }
   if {$baction1 eq $baction2} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a BusinessAction cannot be\
                           mutual exclusive to itself."]
   }
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {[$ba1 isDynamicallyMutualExclusive $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, two BusinessActions can either be\
                           statically or dynamically mutual exclusive, but not both at the same time."]
   }
   if {[$ba1 hasRoleBinding $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a direct or transitive role binding\
                           is defined between BusinessActions << $baction1 >> and << $baction2 >>. Therefore,\
                           they cannot be statically mutual exclusive at the same time."]
   }
   if {[$ba1 hasSubjectBinding $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a direct or transitive subject binding\
                           is defined between BusinessActions << $baction1 >> and << $baction2 >>. Therefore,\
                           they cannot be statically mutual exclusive at the same time."]
   }
-  if {[my associated_rbac_model] != ""} { 
+  if {[my associated_rbac_model] != ""} {
     foreach r [[my associated_rbac_model] getAllRoleInstances] {
       if {[$r ownsTask $baction1] && [$r ownsTask $baction2]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, Role << [$r name] >> already owns\
                             both BusinessActions << $baction1 >> and << $baction2 >>. Therefore these\
                             BusinessActions must not be defined as statically mutual exclusive. Remember\
@@ -109,7 +109,7 @@ BusinessActivity instproc setSMEConstraint {baction1 baction2} {
     }
     foreach s [[my associated_rbac_model] getAllSubjectInstances] {
       if {[$s canPotentiallyExecute $baction1] && [$s canPotentiallyExecute $baction2]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, Subject << [$s name] >> can execute\
                             both BusinessActions << $baction1 >> and << $baction2 >>. Therefore these\
                             BusinessActions must not be defined as statically mutual exclusive. Remember\
@@ -120,7 +120,7 @@ BusinessActivity instproc setSMEConstraint {baction1 baction2} {
   }
   $ba1 set sme($baction2) $ba2
   $ba2 set sme($baction1) $ba1
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully defined SME constraint\
                         on BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -133,13 +133,13 @@ BusinessActivity instproc unsetSMEConstraint {baction1 baction2} {
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {![$ba1 isStaticallyMutualExclusive $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActions << $baction1 >>\
                           and << $baction2 >> are not defined as statically mutual exclusive."]
-  } 
+  }
   $ba1 unset sme($baction2)
   $ba2 unset sme($baction1)
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully removed the SME\
                         constraint between BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -150,26 +150,26 @@ BusinessActivity instproc setDMEConstraint {baction1 baction2} {
     if {![$check success]} { return $check }
   }
   if {$baction1 eq $baction2} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a BusinessAction cannot be\
                           mutual exclusive to itself."]
   }
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {[$ba1 isStaticallyMutualExclusive $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, two BusinessActions can either be\
                           statically or dynamically mutual exclusive, but not both at the same time."]
   }
   if {[$ba1 hasSubjectBinding $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a direct or transitive subject binding\
                           is defined on BusinessActions << $baction1 >> and << $baction2 >>. Therefore,\
                           they cannot be dynamically mutual exclusive at the same time."]
   }
   $ba1 set dme($baction2) $ba2
   $ba2 set dme($baction1) $ba1
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully defined DME constraint\
                         on BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -182,13 +182,13 @@ BusinessActivity instproc unsetDMEConstraint {baction1 baction2} {
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {![$ba1 isDynamicallyMutualExclusive $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActions << $baction1 >>\
                           and << $baction2 >> are not defined as dynamically mutual exclusive."]
   }
   $ba1 unset dme($baction2)
   $ba2 unset dme($baction1)
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully removed the DME\
                         constraint between BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -199,7 +199,7 @@ BusinessActivity instproc setSubjectBinding {baction1 baction2} {
     if {![$check success]} { return $check }
   }
   if {$baction1 eq $baction2} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, binding a BusinessAction\
                           to itself is not sensible. Subject bindings can only be defined between\
                           two different BusinessActions."]
@@ -207,20 +207,20 @@ BusinessActivity instproc setSubjectBinding {baction1 baction2} {
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {[$ba1 isMutualExclusive $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActions << $baction1 >>\
                           and << $baction2 >> are mutual exclusive. Therefore, it is not possible to\
                           define a subject binding on these BusinessActions."]
   }
   if {![$ba1 subjectBindingAllowedByMEXConstraints $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a subject binding between\
                           BusinessActions << $baction1 >> and << $baction2 >> would create a\
                           transitive binding between << $baction1 >> and one of the BusinessActions\
                           that are mutual exclusive to << $baction1 >>."]
   }
   if {![$ba2 subjectBindingAllowedByMEXConstraints $baction1]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a subject binding between\
                           BusinessActions << $baction1 >> and << $baction2 >> would create a\
                           transitive binding between << $baction2 >> and one of the BusinessActions\
@@ -228,7 +228,7 @@ BusinessActivity instproc setSubjectBinding {baction1 baction2} {
   }
   $ba1 set subjectbinding($baction2) $ba2
   $ba2 set subjectbinding($baction1) $ba1
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully defined subject binding\
                         on BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -241,13 +241,13 @@ BusinessActivity instproc unsetSubjectBinding {baction1 baction2} {
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {![$ba1 hasDirectSubjectBinding $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, no direct subject binding defined\
                           between BusinessActions << $baction1 >> and << $baction2 >>."]
   }
   $ba1 unset subjectbinding($baction2)
   $ba2 unset subjectbinding($baction1)
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully removed the subject binding\
                         between BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -258,7 +258,7 @@ BusinessActivity instproc setRoleBinding {baction1 baction2} {
     if {![$check success]} { return $check }
   }
   if {$baction1 eq $baction2} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, binding a BusinessAction\
                           to itself is not sensible. Role bindings can only be defined between\
                           two different BusinessActions."]
@@ -266,20 +266,20 @@ BusinessActivity instproc setRoleBinding {baction1 baction2} {
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {[$ba1 isStaticallyMutualExclusive $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActions << $baction1 >>\
                           and << $baction2 >> are statically mutual exclusive. Therefore, it is not\
                           possible to define a role binding on these BusinessActions."]
   }
    if {![$ba1 roleBindingAllowedByMEXConstraints $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a role binding between\
                           BusinessActions << $baction1 >> and << $baction2 >> would create a\
                           transitive binding between << $baction1 >> and one of the BusinessActions\
                           that are statically mutual exclusive to << $baction1 >>."]
   }
   if {![$ba2 roleBindingAllowedByMEXConstraints $baction1]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, a role binding between\
                           BusinessActions << $baction1 >> and << $baction2 >> would create a\
                           transitive binding between << $baction2 >> and one of the BusinessActions\
@@ -287,7 +287,7 @@ BusinessActivity instproc setRoleBinding {baction1 baction2} {
   }
   $ba1 set rolebinding($baction2) $ba2
   $ba2 set rolebinding($baction1) $ba1
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully defined role binding\
                         on BusinessActions << $baction1 >> and << $baction2 >>."]
 }
@@ -300,24 +300,24 @@ BusinessActivity instproc unsetRoleBinding {baction1 baction2} {
   set ba1 [my getFQON ::UML2::BusinessAction $baction1]
   set ba2 [my getFQON ::UML2::BusinessAction $baction2]
   if {![$ba1 hasDirectRoleBinding $baction2]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, no direct role binding defined\
                           between BusinessActions << $baction1 >> and << $baction2 >>."]
   }
   $ba1 unset rolebinding($baction2)
   $ba2 unset rolebinding($baction1)
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully removed the role binding\
                         between BusinessActions << $baction1 >> and << $baction2 >>."]
 }
 
 BusinessActivity instproc businessActionExists {baction} {
   if {![my existNode ::UML2::BusinessAction $baction]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessAction << $baction >>\
                           does not exist in [my info class] << [my name] >>."]
   }
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1]
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1]
 }
 
 BusinessActivity instproc unvisitAllBusinessActions {} {
@@ -330,7 +330,7 @@ BusinessActivity instproc unvisitAllBusinessActions {} {
 # Class BusinessAction
 ################################
 
-Class BusinessAction -superclass {::xotcl::Class ::UML2::Action} -slots {
+Class create BusinessAction -superclass {::xotcl::Class ::UML2::Action} -slots {
   ::msxolib::SingleValued visited -default 0
 }
 
@@ -347,8 +347,8 @@ BusinessAction instproc init args {
     ::msxolib::SingleValued owning_graph
   }
 
-  # the following methods check if a certain subject can be 
-  # allocated to a particular BusinessAction *instance* with 
+  # the following methods check if a certain subject can be
+  # allocated to a particular BusinessAction *instance* with
   # respect to the corresponding MEX and BOD constraints and
   # the execution history of the corresponding BusinessActivity
   [self] instproc checkDMEConstraints {subject} {
@@ -363,7 +363,7 @@ BusinessAction instproc init args {
 	if {[$bainstance executing_subject] eq $subjname} { return 0 }
       }
     }
-    # if subject is not allocated to one of the 
+    # if subject is not allocated to one of the
     # dynamically mutual exclusive business actions
     return 1
   }
@@ -374,17 +374,17 @@ BusinessAction instproc init args {
       return 1
     } else {
       set subjrole [$subject active_role]
-      # the executing role of a BusinessAction instance can be allocated 
-      # before allocating a subject in case a role bound BusinessAction instance 
+      # the executing role of a BusinessAction instance can be allocated
+      # before allocating a subject in case a role bound BusinessAction instance
       # is allocated
       if {[my executing_role] != ""} {
 	if {!([my executing_role] eq $subjrole)} { return 0 }
       }
       foreach ba $rbind {
 	# (note that it must never happen that one of the role-bound
-	# business actions is allocated to another role; the check 
+	# business actions is allocated to another role; the check
 	# is performed for consistency reasons only; all bound business
-	# actions are allocated at the same time; cf. the 
+	# actions are allocated at the same time; cf. the
 	# implementation of the "allocate" method)
 	set batype [namespace tail [[my info class] set rolebinding($ba)]]
 	set bainstance [[my owning_graph] set [set batype]($ba)]
@@ -393,8 +393,8 @@ BusinessAction instproc init args {
 	}
       }
     }
-    # if non of the role-bound business action instances 
-    # is allocated to a different executing role yet 
+    # if non of the role-bound business action instances
+    # is allocated to a different executing role yet
     return 1
   }
 
@@ -406,9 +406,9 @@ BusinessAction instproc init args {
       set subjname [$subject name]
       foreach ba $sbind {
 	# (note that it must never happen that one of the subject-bound
-	# business action instances is allocated to another subject; 
-	# the check is performed for consistency reasons only; all bound 
-	# business actions are allocated at the same time; cf. the 
+	# business action instances is allocated to another subject;
+	# the check is performed for consistency reasons only; all bound
+	# business actions are allocated at the same time; cf. the
 	# implementation of the "allocate" method)
 	set batype [namespace tail [[my info class] set subjectbinding($ba)]]
 	set bainstance [[my owning_graph] set [set batype]($ba)]
@@ -417,8 +417,8 @@ BusinessAction instproc init args {
 	}
       }
     }
-    # if non of the subject-bound business action instances 
-    # has a different executing subject yet 
+    # if non of the subject-bound business action instances
+    # has a different executing subject yet
     return 1
   }
 
@@ -445,7 +445,7 @@ BusinessAction instproc init args {
   [self] instproc allocate {{subject ""}} {
     if {$subject eq ""} {
       if {[my executing_subject] != ""} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		    -comment "[my info class] [self] [self proc], BusinessAction << [my name] >> already\
                               allocated to << [my executing_subject] >>."]
       }
@@ -457,23 +457,23 @@ BusinessAction instproc init args {
 	set s [lindex $allocatable $index]
 	my executing_subject [$s name]
 	my executing_role [$s active_role]
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		    -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                               successfully allocated BusinessAction << [my name] >>\
                               to << [my executing_subject] >>."]
       } else {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc] FAILED,\
                               BusinessAction << [my name] >> cannot be allocated to any subject."]
       }
     } else {
       if {[my executing_subject] != ""} {
 	if {[my executing_subject] eq [$subject name]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		      -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                                 BusinessAction << [my name] >> already allocated to << [my executing_subject] >>."]
 	} else {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                                 BusinessAction << [my name] >> already allocated to << [my executing_subject] >>."]
 	}
@@ -481,12 +481,12 @@ BusinessAction instproc init args {
       if {[my isAllocatableToSubject $subject]} {
 	my executing_subject [$subject name]
 	my executing_role [$subject active_role]
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 		    -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc],\
                               successfully allocated BusinessAction << [my name] >>\
                               to << [my executing_subject] >>."]
       } else {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[[my owning_graph] info class] [my owning_graph] [self] [self proc] FAILED,\
                               BusinessAction << [my name] >> cannot be allocated to << [$subject name] >>."]
       }
@@ -538,8 +538,8 @@ BusinessAction instproc hasRoleBinding {baction} {
 }
 
 # check if a newly defined subject binding between two business actions
-# would create a transitive binding between two business actions that 
-# are already defined as mutual exclusive 
+# would create a transitive binding between two business actions that
+# are already defined as mutual exclusive
 BusinessAction instproc subjectBindingAllowedByMEXConstraints {baction} {
    foreach mutex [my array names sme] {
      if {[[my set sme($mutex)] hasSubjectBinding $baction]} { return 0 }
@@ -619,7 +619,7 @@ BusinessAction instproc getDMEConstraints {} {
 # RBAC related classes
 ################################
 
-Class BusinessActivity::RBACModel -superclass ::UML2::Graph
+Class create BusinessActivity::RBACModel -superclass ::UML2::Graph
 
 BusinessActivity::RBACModel instproc init args {
   foreach ntype {Role Subject} {
@@ -636,23 +636,23 @@ BusinessActivity::RBACModel instproc addRole {role} {
 }
 
 BusinessActivity::RBACModel instproc addSubject {subject} {
-  my addNode ::UML2::BusinessActivity::Subject $subject
+	my addNode ::UML2::BusinessActivity::Subject $subject
 }
 
 BusinessActivity::RBACModel instproc roleSubjectAssign {role subject} {
   if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
   }
   if {![my existNode ::UML2::BusinessActivity::Subject $subject]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Subject << $subject >> does not exist."]
   }
   set r [my getFQON ::UML2::BusinessActivity::Role $role]
   set s [my getFQON ::UML2::BusinessActivity::Subject $subject]
   foreach sr [$s getAllAssignedRoles] {
     if {[$sr isStaticallyMutualExclusive $r]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, Subject << $subject >>,\
                             already owns Role << [$sr name] >> which is statically mutual exclusive\
                             to << $role >>. Remember that roles inherit mutual exclusion\
@@ -670,21 +670,21 @@ BusinessActivity::RBACModel instproc roleSubjectAssign {role subject} {
 
 BusinessActivity::RBACModel instproc roleSubjectRevoke {role subject} {
   if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
   }
   if {![my existNode ::UML2::BusinessActivity::Subject $subject]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Subject << $subject >> does not exist."]
   }
   set s [my getFQON ::UML2::BusinessActivity::Subject $subject]
   if {![$s ownsRole $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> is not assigned\
                           to Subject << $subject >>."]
   }
   $s unset roles($role)
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 	      -comment "[my info class] [self] [self proc], successfully revoked Role << $role >>\
                         from Subject << $subject >>."]
 }
@@ -701,29 +701,29 @@ BusinessActivity::RBACModel instproc getAllSubjectsOwningRole {role} {
 
 BusinessActivity::RBACModel instproc taskRoleAssign {process task role} {
   if {![::xotcl::Object isobject $process]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >>\
                           does not exist."]
   }
   if {![$process istype ::UML2::BusinessActivity]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, << $process >> is not of\
                           type BusinessActivity."]
   }
   if {![$process existNode ::UML2::BusinessAction $task]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >> does\
                           not contain BusinessAction << $task >>."]
   }
   if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
   }
   set r [my getFQON ::UML2::BusinessActivity::Role $role]
   set t [$process getFQON ::UML2::BusinessActivity::BusinessAction $task]
   foreach ba [$r getAllAssignedTasks] {
     if {[$ba isStaticallyMutualExclusive $task]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $task >>\
                             is statically mutual exclusive to BusinessAction << [$ba name] >>\
                             which is already (directly or transitively) assigned to Role << $role >>."]
@@ -732,7 +732,7 @@ BusinessActivity::RBACModel instproc taskRoleAssign {process task role} {
   foreach sr [$r getAllSeniorRoles] {
     foreach ba [$sr getDirectlyAssignedTasks] {
       if {[$ba isStaticallyMutualExclusive $task]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, BusinessAction << $task >>\
                               is statically mutual exclusive to BusinessAction << [$ba name] >>\
                               which is assigned to a senior-role of << $role >>. By assigning << $task >>\
@@ -745,7 +745,7 @@ BusinessActivity::RBACModel instproc taskRoleAssign {process task role} {
     foreach sr [$s getAllAssignedRoles] {
       foreach st [$sr getAllAssignedTasks] {
 	if {[$st isStaticallyMutualExclusive $task]} {
-	  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		      -comment "[my info class] [self] [self proc] FAILED, Role << $role >> is assigned\
                                 to Subject << [$s name] >>. This subject owns also owns Role << [$sr name] >>\
                                 which again owns BusinessAction << [$st name] >>. This BusinessAction is\
@@ -758,39 +758,39 @@ BusinessActivity::RBACModel instproc taskRoleAssign {process task role} {
     }
   }
   $r set tasks($task) $t
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully assigned BusinessAction\
                         << $task >> to Role << $role >>."]
 }
 
 BusinessActivity::RBACModel instproc taskRoleRevoke {process task role} {
   if {![::xotcl::Object isobject $process]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >>\
                           does not exist."]
   }
   if {![$process istype ::UML2::BusinessActivity]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, << $process >> is not of\
                           type BusinessActivity."]
   }
   if {![$process existNode ::UML2::BusinessAction $task]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessActivity << $process >> does\
                           not contain BusinessAction << $task >>."]
   }
   if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
   }
   set r [my getFQON ::UML2::BusinessActivity::Role $role]
   if {![$r directlyOwnsTask $task]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, BusinessAction << $task >> is not\
                           directly assigned to Role << $role >>."]
   }
   $r unset tasks($task)
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], successfully revoked BusinessAction << $task >>\
                         from Role << $role >>."]
 }
@@ -798,24 +798,24 @@ BusinessActivity::RBACModel instproc taskRoleRevoke {process task role} {
 
 BusinessActivity::RBACModel instproc addJuniorRoleRelation {role junior} {
   if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
   }
   if {![my existNode ::UML2::BusinessActivity::Role $junior]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $junior >> does not exist."]
   }
   set r [my getFQON ::UML2::BusinessActivity::Role $role]
   set j [my getFQON ::UML2::BusinessActivity::Role $junior]
   if {[$r isStaticallyMutualExclusive $j]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> is statically\
                           mutual exclusive to Role << $junior >>. Remember that roles inherit mutual\
                           exclusion constraints from their (direct and transitive) BusinessActions."]
   }
   foreach sr [$r getAllSeniorRoles] {
     if {[$sr isStaticallyMutualExclusive $j]} {
-      return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+      return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		  -comment "[my info class] [self] [self proc] FAILED, Role << $junior>> is statically\
                             mutual exclusive to Role << [$sr name] >> which is a senior-role of << $role >>.\
                             By adding a junior-role relation between << $role >> and << $junior >>\
@@ -827,7 +827,7 @@ BusinessActivity::RBACModel instproc addJuniorRoleRelation {role junior} {
   foreach s [my getAllSubjectsOwningRole $role] {
     foreach sr [$s getAllAssignedRoles] {
       if {[$sr isStaticallyMutualExclusive $j]} {
-	return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+	return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		    -comment "[my info class] [self] [self proc] FAILED, Role << $role >> is assigned\
                               to Subject << [$s name] >>. This subject also owns Role << [$sr name] >>\
                               which is statically mutual exclusive to Role << $junior >>. By adding a\
@@ -854,22 +854,22 @@ BusinessActivity::RBACModel instproc addSeniorRoleRelation {role senior} {
 
 BusinessActivity::RBACModel instproc setActiveRole {subject role} {
   if {![my existNode ::UML2::BusinessActivity::Subject $subject]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Subject << $subject >>\
                           does not exist."]
   }
   if {![my existNode ::UML2::BusinessActivity::Role $role]} {
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> does not exist."]
   }
   set s [my getFQON ::UML2::BusinessActivity::Subject $subject]
-  if {![$s ownsRole $role]} { 
-    return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
+  if {![$s ownsRole $role]} {
+    return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 0\
 		-comment "[my info class] [self] [self proc] FAILED, Role << $role >> is not assigned\
                           to Subject << $subject >>."]
   }
   $s active_role $role
-  return [::msxolib::FunctionResult [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
+  return [::msxolib::FunctionResult create [::xotcl::Object autoname ::UML2::resultobjects::result] -success 1\
 	      -comment "[my info class] [self] [self proc], active role of Subject << $subject >>\
                         set to << $role >>."]
 }
@@ -886,7 +886,7 @@ BusinessActivity::RBACModel instproc existSubject {subject} {
   return [my existNode ::UML2::BusinessActivity::Subject $subject]
 }
 
-Class BusinessActivity::Subject -superclass {::UML2::Graph::Node ::UML2::Graph::Node::MultiIn} -slots {
+Class create BusinessActivity::Subject -superclass {::UML2::Graph::Node ::UML2::Graph::Node::MultiIn} -slots {
   ::msxolib::SingleValued active_role
 }
 
@@ -924,7 +924,7 @@ BusinessActivity::Subject instproc canPotentiallyExecute {baction} {
 }
 
 # with respect to the subject's active_role: is the subject
-# (currently) able to execute the task referred to via the 
+# (currently) able to execute the task referred to via the
 # baction parameter?
 BusinessActivity::Subject instproc canCurrentlyExecute {baction} {
   if {[my active_role] != ""} {
@@ -937,7 +937,7 @@ BusinessActivity::Subject instproc canCurrentlyExecute {baction} {
 BusinessActivity::Subject instproc canExecuteAllSubjectBoundTasks {baction} {
   foreach ba [$baction getAllSubjectBindingConstraints] {
     if {![my canCurrentlyExecute [$ba name]]} {
-      return 0 
+      return 0
     }
   }
   return 1
@@ -990,7 +990,7 @@ BusinessActivity::Subject instproc getAllAssignedTasks {} {
 
 
 
-Class BusinessActivity::Role -superclass {::UML2::Graph::Node ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::MultiOut}
+Class create BusinessActivity::Role -superclass {::UML2::Graph::Node ::UML2::Graph::Node::MultiIn ::UML2::Graph::Node::MultiOut}
 
 BusinessActivity::Role instproc init args {
   array set tasks ""
@@ -1098,7 +1098,7 @@ BusinessActivity::Role instproc getTransitivelyAssignedTasks {} {
 BusinessActivity::Role instproc getAllAssignedTasks {} {
   set tasks [my getDirectlyAssignedTasks]
   set tasks [concat $tasks [my getTransitivelyAssignedTasks]]
-  return [lsort -dictionary -unique $tasks]	     
+  return [lsort -dictionary -unique $tasks]
 }
 
 BusinessActivity::Role instproc isStaticallyMutualExclusive {role} {
@@ -1112,9 +1112,9 @@ BusinessActivity::Role instproc isStaticallyMutualExclusive {role} {
   return 0
 }
 
-Class BusinessActivity::RoleToSubjectAssignment -superclass ::UML2::Graph::Edge
+Class create BusinessActivity::RoleToSubjectAssignment -superclass ::UML2::Graph::Edge
 
-Class BusinessActivity::RoleToRoleAssignment -superclass ::UML2::Graph::Edge
+Class create BusinessActivity::RoleToRoleAssignment -superclass ::UML2::Graph::Edge
 
 
 

@@ -1,4 +1,3 @@
-
 ::STORM::TestCase BA_RBAC_Roles \
     -setup_script {
       ::UML2::BusinessActivity::RBACModel ::rbac
