@@ -190,24 +190,24 @@ namespace eval ::STORM {
   TestCase instproc checkPreConditions {} {
     foreach pc [my preconditions] {
       if {![my do $pc]} {
-	return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		    -success 0 -object_reference [self]\
 		    -comment "precondition << $pc >> failed"]
       }
     }
-    return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+    return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		-success 1 -object_reference [self]]
   }
   
   TestCase instproc checkPostConditions {} {
     foreach pc [my postconditions] {
       if {![my do $pc]} {
-	return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		    -success 0 -object_reference [self]\
 		    -comment "postcondition << $pc >> failed"]
       }
     }
-    return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+    return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		-success 1 -object_reference [self]]
   }
 
@@ -222,7 +222,7 @@ namespace eval ::STORM {
 	set pre [$s checkPreConditions]
 	if {![$pre success]} {
 	  if {[info exists cleanup_script]} { my do $cleanup_script }
-	  return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	  return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		      -success 0 -object_reference $s\
 		      -comment "Test scenario $s -> [$pre comment]"]
 	}
@@ -230,7 +230,7 @@ namespace eval ::STORM {
 	if {![$testbody success]} {
 	  $s cleanup
 	  if {[info exists cleanup_script]} { my do $cleanup_script }
-	  return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	  return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		      -success 0 -object_reference $s\
 		      -comment "Test scenario $s -> [$testbody comment]"]
 	}
@@ -238,7 +238,7 @@ namespace eval ::STORM {
 	if {![$post success]} {
 	  $s cleanup
 	  if {[info exists cleanup_script]} { my do $cleanup_script }
-	  return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	  return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		      -success 0 -object_reference $s\
 		      -comment "Test scenario $s -> [$post comment]"]
 	}
@@ -246,7 +246,7 @@ namespace eval ::STORM {
       }
     }
     if {[info exists cleanup_script]} { my do $cleanup_script }
-    return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+    return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		-success 1 -object_reference [self]\
 		-comment "Test case [self] successful"]
   }
@@ -323,24 +323,24 @@ namespace eval ::STORM {
   TestScenario instproc checkPreConditions {} {
     foreach pc [my preconditions] {
       if {![my do $pc]} {
-	return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		    -success 0 -object_reference [self]\
 		    -comment "precondition << $pc >> failed"]
       }
     }
-    return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+    return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		-success 1 -object_reference [self]]
   }
 
   TestScenario instproc checkPostConditions {} {
     foreach pc [my postconditions] {
       if {![my do $pc]} {
-	return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		    -success 0 -object_reference [self]\
 		    -comment "postcondition << $pc >> failed"]
       }
     }
-    return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+    return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		-success 1 -object_reference [self]]
   }
 
@@ -358,21 +358,21 @@ namespace eval ::STORM {
       if {[info exists expected_result]} {
 	set resultequal [my lequal $result $expected_result]
 	if {$resultequal} {
-	  return [::STORM::TestResult [::xotcl::Object autoname testresult%08d] -success 1\
+	  return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d] -success 1\
 		      -object_reference [self]]
 	} else {
-	   return [::STORM::TestResult [::xotcl::Object autoname testresult%08d] -success 0\
+	   return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d] -success 0\
 		       -object_reference [self]\
 		       -comment "[self]: test body result << $result >> does not match the\
                                  expected result << $expected_result >>."]
 	}	  
       } else { 
-	return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+	return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		    -success 1 -object_reference [self]\
 		    -comment "[self]: no expected result defined"]
       }
     } else { 
-      return [::STORM::TestResult [::xotcl::Object autoname testresult%08d]\
+      return [::STORM::TestResult create [::xotcl::Object autoname testresult%08d]\
 		  -success 0 -object_reference [self]\
 		  -comment "[self]: no test body defined"]
     }

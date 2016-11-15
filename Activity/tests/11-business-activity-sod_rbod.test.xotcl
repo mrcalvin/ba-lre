@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_MEX_RBind \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::BusinessAction A
       ::process addNode ::UML2::BusinessAction B
       ::process addNode ::UML2::BusinessAction C

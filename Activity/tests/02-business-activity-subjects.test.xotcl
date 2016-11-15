@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_RBAC_Subjects \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity::RBACModel ::rbac
+      ::UML2::BusinessActivity::RBACModel create ::rbac
     } \
     -cleanup_script {
       ::rbac destroy

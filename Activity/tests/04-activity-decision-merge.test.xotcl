@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_ControlNodesDecisionMergeOF \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction A
       ::process addNode ::UML2::BusinessAction B
@@ -1527,7 +1527,7 @@ BA_ControlNodesDecisionMergeOF order add BA_ControlNodesDecisionMergeOF::AddObjF
 ::STORM::TestCase BA_ControlNodesDecisionMergeOF2 \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction A
       ::process addNode ::UML2::BusinessAction B

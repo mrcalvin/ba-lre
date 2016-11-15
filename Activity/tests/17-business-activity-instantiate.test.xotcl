@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_Instantiate \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction A
       ::process addNode ::UML2::BusinessAction B
@@ -48,7 +48,7 @@
     }
 
 ::STORM::TestScenario BA_Instantiate::Success \
-    -test_body {::process ::myProcessInstance}\
+    -test_body {::process create ::myProcessInstance}\
     -expected_result ::myProcessInstance
 BA_Instantiate::Success preconditions assign\
     { {my lequal [lsort -dictionary [::process valid_node_types]] "::UML2::Action ::UML2::ActivityFinalNode ::UML2::BusinessAction\

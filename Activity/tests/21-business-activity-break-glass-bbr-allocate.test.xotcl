@@ -62,7 +62,7 @@
       ::process setRoleBinding T7 T8
       ::process setRoleBinding T8 T9
 
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addRole R1
       ::rbacmodel addRole R2
@@ -7247,8 +7247,8 @@ BA_BG_BBR_Allocate order add BA_BG_BBR_Allocate::UnbreakTaskFail end
        my resetAllAutonames ::xotcl::Object
        package require -exact UML2::BusinessActivity::BreakGlass 0.1.1
 
-      ::UML2::BusinessActivity ::process
-      ::UML2::BusinessActivity ::reviewprocess
+      ::UML2::BusinessActivity create ::process
+      ::UML2::BusinessActivity create ::reviewprocess
       ::process addNode ::UML2::InitialNode Start
       ::process addNode ::UML2::BusinessAction T1
       ::process addNode ::UML2::BusinessAction T2
@@ -7305,7 +7305,7 @@ BA_BG_BBR_Allocate order add BA_BG_BBR_Allocate::UnbreakTaskFail end
       ::process setRoleBinding T7 T8
       ::process setRoleBinding T8 T9
 
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addRole R1
       ::rbacmodel addRole R2

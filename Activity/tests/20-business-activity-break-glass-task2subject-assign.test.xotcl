@@ -4,7 +4,7 @@
        my resetAllAutonames ::xotcl::Object
       package require -exact UML2::BusinessActivity::BreakGlass 0.1.1
 
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::BusinessAction T1
       ::process addNode ::UML2::BusinessAction T2
       ::process addNode ::UML2::BusinessAction T3
@@ -15,7 +15,7 @@
       ::process addNode ::UML2::BusinessAction T8
       ::process addNode ::UML2::BusinessAction T9
      
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addRole A
       ::rbacmodel addRole B

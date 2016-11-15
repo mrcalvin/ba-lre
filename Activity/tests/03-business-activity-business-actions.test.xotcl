@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_BusinessActions \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
     } \
     -cleanup_script {
       ::process destroy

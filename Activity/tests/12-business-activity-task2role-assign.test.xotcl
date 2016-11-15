@@ -2,7 +2,7 @@
 ::STORM::TestCase BA_T2R_Assign \
     -setup_script {
        my resetAllAutonames ::xotcl::Object
-      ::UML2::BusinessActivity ::process
+      ::UML2::BusinessActivity create ::process
       ::process addNode ::UML2::BusinessAction T1
       ::process addNode ::UML2::BusinessAction T2
       ::process addNode ::UML2::BusinessAction T3
@@ -13,7 +13,7 @@
       ::process setSMEConstraint T3 T4
       ::process setDMEConstraint T1 T5
 
-      ::UML2::BusinessActivity::RBACModel ::rbacmodel
+      ::UML2::BusinessActivity::RBACModel create ::rbacmodel
       ::process associated_rbac_model ::rbacmodel
       ::rbacmodel addRole A
       ::rbacmodel addRole B
